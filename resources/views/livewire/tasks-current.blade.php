@@ -141,12 +141,20 @@
     <x-dialog-modal wire:model="showTaskDialog" maxWidth="7xl" contentClass="lg:overflow-y-hidden">
         
         <x-slot name="title">
-            
-            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 pt-3">
-            
-                <div class="mb-3">
+
+            <div 
+                x-data="{ showDates : false, maybeShow() { this.showDates = window.innerWidth > 640 } }"
+                @resize.window="maybeShow()"
+                x-init="maybeShow()"
+                class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 pt-3 mb-3"
+            >
+
+                <!-- Task Status -->        
+                <div class="mb-3 col-span-2 sm:col-span-1">
                 
                     <div class="w-full flex gap-3">
+                        
+                        <!-- Task Status Dropdown -->
                         <x-forms.form-group class="grow">
                             <x-forms.select id="task_status_id" name="task_status_id" wire:model="currentTask.statusId">
                                 @foreach ($taskStatuses as $status)
@@ -156,11 +164,13 @@
                             <x-forms.label for="task_status_id">{{ __('Status') }}</x-forms.label>
                         </x-forms.form-group>
                         
+                        <!-- Task Status Checkbox -->
                         @if (isset($currentTask['statusId']) && $currentTask['statusId'] != $taskStatusClosed)
                             <button wire:click="updateTaskStatusClosed({{ isset($currentTask['id']) ? $currentTask['id'] : '' }})" class="grow-0 flex justify-items-center items-center" aria-label="Mark task closed">
                                 <svg class="h-10 w-10 border-2 border-gray-300 rounded fill-gray-500 hover:border-green-300 hover:fill-green-600 p-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
                             </button>
                         @endif    
+
                     </div>
 
                     @error ('currentTask.statusId') 
@@ -168,7 +178,13 @@
                     @enderror
                 </div>
 
-                <div class="mb-3 lg:col-start-4">
+                <!-- Dates Toggle Button -->
+                <button @click="showDates = !showDates" class="mb-3 justify-self-end block sm:hidden text-gray-700 rounded hover:border focus:border focus:bg-gray-100" type="button" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle Task Dates">
+                    <svg class="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 248H128V192H48V248zM48 296V360H128V296H48zM176 296V360H272V296H176zM320 296V360H400V296H320zM400 192H320V248H400V192zM400 408H320V464H384C392.8 464 400 456.8 400 448V408zM272 408H176V464H272V408zM128 408H48V448C48 456.8 55.16 464 64 464H128V408zM272 192H176V248H272V192z"/></svg>    
+                </button>
+
+                <!-- Task Repeats -->
+                <div class="mb-3 lg:col-start-4" x-show="showDates" x-transition.duration.300ms>
                     <x-forms.form-group>
                         <x-forms.select id="task_repeats" name="task_repeats" wire:model="currentTask.repeats">
                             <option value=""></option>
@@ -182,7 +198,8 @@
                     </x-forms.form-group>
                 </div>
 
-                <div class="mb-3">
+                <!-- Start Date -->
+                <div class="mb-3" x-show="showDates" x-transition.duration.300ms>
                     <x-forms.form-group>
                         <x-forms.input id="date_start" name="date_start" type="date" wire:model="currentTask.dateStart" />
                         <x-forms.label for="date_start">{{ __('Start Date') }}</x-forms.label>
@@ -192,7 +209,8 @@
                     @enderror
                 </div>
 
-                <div class="mb-3">
+                <!-- Due Date -->
+                <div class="mb-3" x-show="showDates" x-transition.duration.300ms>
                     <x-forms.form-group>
                         <x-forms.input id="date_due" name="date_due" type="date" wire:model="currentTask.dateDue" />
                         <x-forms.label for="date_due">{{ __('Due Date') }}</x-forms.label>
@@ -201,19 +219,20 @@
                         <p id="date_due_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-
-                <div class="mb-8 col-span-2 md:col-span-6">
-                    <x-forms.form-group>
-                        <x-forms.input type="text" id="name" name="name" wire:model="currentTask.name" />
-                        <x-forms.label for="name">{{ __('Task Name') }}</x-forms.label>
-                    </x-forms.form-group>
-                    @error ('currentTask.name')
-                        <p id="name_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
+            
             </div>
 
+            <!-- Task Name -->
+            <div class="mb-8 col-span-2 md:col-span-6">
+                <x-forms.form-group>
+                    <x-forms.input type="text" id="name" name="name" wire:model="currentTask.name" />
+                    <x-forms.label for="name">{{ __('Task Name') }}</x-forms.label>
+                </x-forms.form-group>
+                @error ('currentTask.name')
+                    <p id="name_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+            
         </x-slot>
         
         <x-slot name="content">

@@ -78,7 +78,6 @@ class Tasks extends Component
         $this->currentTaskId = $task->id; // Until livewire queryString supports multidimensional arrays properly we need to set it as a separate public variable
 
         $this->showTaskDialog = true;
-        // $this->dispatchBrowserEvent('showTaskDialog');
     }
 
     protected function getTasksList()
