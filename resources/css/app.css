@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .alert-success {
+        @apply p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800;
+    }
+
+
+    .text-danger {
+        @apply bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative;
+    }
+
+    .form-input-label {
+        @apply absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6
+    }
+}
+
+.spinner {
+    /* Spinner size and color */
+    width: 5rem;
+    height: 5rem;
+    border-top-color: #444;
+    border-left-color: #444;
+  
+    /* Additional spinner styles */
+    animation: spinner 1s linear infinite;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    border-style: solid;
+    border-width: 6px;
+    border-radius: 50%;  
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Animation styles */
+@keyframes spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Tailwind Override */
+.trix-editor {
+    width: 100%;
+}
+
+.trix-editor h1 {
+    font-size: 1.25rem !important;
+    line-height: 1.25rem !important;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.trix-editor a:not(.no-underline) {
+    text-decoration: underline;
+}
+
+.trix-editor a:visited {
+    color: green;
+}
+
+.trix-editor ul {
+    list-style-type: disc;
+    padding-left: 1rem;
+}
+
+.trix-editor ol {
+    list-style-type: decimal;
+    padding-left: 1rem;
+}
+
+.trix-editor pre {
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+    font-family: monospace;
+    font-size: 1.5em;
+    padding: 0.5em;
+    white-space: pre;
+    background-color: #eee;
+    overflow-x: auto;
+}
+
+.trix-editor blockquote {
+    border: 0 solid #ccc;
+    border-left-width: 0px;
+    border-left-width: 0.3em;
+    margin-left: 0.3em;
+    padding-left: 0.6em;
+}
