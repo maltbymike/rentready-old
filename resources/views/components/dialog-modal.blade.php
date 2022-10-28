@@ -7,16 +7,16 @@
     ])
 
 <x-modal :id="$id" :maxWidth="$maxWidth" {{ $attributes }}>
-    <div class="p-6 h-[94vh] flex flex-col {{ $titleClass }}">
-        <div class="text-lg bg-white">
+    <div class="h-[94vh] flex flex-col">
+        <div class="p-6 pb-2 text-lg bg-white {{ $titleClass }}">
             {{ $title }}
         </div>
 
-        <div class="mt-4 -mr-6 pr-2 flex-1 overflow-y-auto {{ $contentClass }}">
+        <div class="-mr-6 px-6 py-2 flex-1 overflow-y-auto {{ $contentClass }}">
             {{ $content }}
         </div>
 
-        <div class="pt-6 text-right {{ $footerClass }}">
+        <div class="p-6 pt-2 text-right {{ $footerClass }}">
             {{ $footer }}
         </div>
     </div>

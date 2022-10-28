@@ -2109,69 +2109,6 @@
             "time": "2022-08-08T13:52:53+00:00"
         },
         {
-            "name": "maxeckel/livewire-editorjs",
-            "version": "v1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/maxeckel/livewire-editorjs.git",
-                "reference": "cb2db9ce1b0e9da2a92ae9246bd4f8675576c545"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/maxeckel/livewire-editorjs/zipball/cb2db9ce1b0e9da2a92ae9246bd4f8675576c545",
-                "reference": "cb2db9ce1b0e9da2a92ae9246bd4f8675576c545",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "illuminate/support": "^7.0|^8.0|^9.0",
-                "livewire/livewire": "^2.3",
-                "php": "^7.3|^8.0|^8,1"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^5.0|^6.0|^7.0",
-                "phpunit/phpunit": "^9.1"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Maxeckel\\LivewireEditorjs\\LivewireEditorjsServiceProvider"
-                    ],
-                    "aliases": {
-                        "LivewireEditorjs": "Maxeckel\\LivewireEditorjs\\LivewireEditorjsFacade"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Maxeckel\\LivewireEditorjs\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Max Eckel",
-                    "email": "contact@max-eckel.dev",
-                    "role": "Developer"
-                }
-            ],
-            "description": "This Package aims for an easy integration of Editor.JS with Laravel Livewire",
-            "homepage": "https://github.com/maxeckel/livewire-editorjs",
-            "keywords": [
-                "livewire-editorjs",
-                "maxeckel"
-            ],
-            "support": {
-                "issues": "https://github.com/maxeckel/livewire-editorjs/issues",
-                "source": "https://github.com/maxeckel/livewire-editorjs/tree/v1.4.0"
-            },
-            "time": "2022-02-11T10:57:00+00:00"
-        },
-        {
             "name": "mobiledetect/mobiledetectlib",
             "version": "2.8.39",
             "source": {

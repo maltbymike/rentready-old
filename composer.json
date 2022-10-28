@@ -13,7 +13,6 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.5",
-        "maxeckel/livewire-editorjs": "^1.4",
         "realrashid/sweet-alert": "^5.1"
     },
     "require-dev": {
@@ -40,8 +39,7 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi",
-            "@php artisan vendor:publish --tag=livewire-editorjs:assets:compiled --force"
+            "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"

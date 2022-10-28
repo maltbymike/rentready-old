@@ -46,7 +46,6 @@
         </div>
 
         @livewireScripts
-        @livewireEditorjsScripts
         @stack('scripts')
 
         @include('sweetalert::alert')
