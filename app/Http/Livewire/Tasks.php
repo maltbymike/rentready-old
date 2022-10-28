@@ -176,7 +176,7 @@ class Tasks extends Component
 
     public function render()
     {
-        return view('livewire.tasks-current');
+        return view('livewire.tasks');
     }
 
     public function resetFormFields()
