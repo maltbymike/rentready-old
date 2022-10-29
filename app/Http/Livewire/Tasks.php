@@ -322,7 +322,7 @@ class Tasks extends Component
                 $changeStatusText = 'Open';
             }
         } else {
-            $changeStatusTo = $this->updateTaskStatusClosed;
+            $changeStatusTo = $this->taskStatusClosed;
             $changeStatusText = 'Closed';
         }
         $task->status()->associate($changeStatusTo);
