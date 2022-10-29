@@ -36,7 +36,7 @@
     <section 
         class="task-lists bg-slate-900 text-white h-full"
         wire:loading.class="opacity-50" 
-        wire:target="edit"
+        wire:target="edit, toggleShowClosed"
     >
 
         <div class="max-w-7xl mx-auto">
@@ -56,13 +56,21 @@
                     <div class="w-full p-3 pr-0">{{ __('Overdue') }}
                         @foreach ($tasksOverdue as $taskInList)
                         <div class="flex text-xs">
-                            <button wire:click="updateTaskStatusClosed({{ $taskInList->id }})" class="grow-0 px-3 flex justify-items-center items-center" aria-label="Mark task with task name: {{ $taskInList->name }} Closed">
+                            <button 
+                                wire:click="updateTaskStatusClosed({{ $taskInList->id }})" 
+                                class="grow-0 px-3 flex justify-items-center items-center" 
+                                aria-label="Mark task with task name: {{ $taskInList->name }} Closed"
+                            >
                                 <svg class="h-5 w-5 border-2 border-gray-300 rounded {{ $taskInList->status->id == $taskStatusClosed ? 'fill-green-600' : 'fill-transparent' }} fill-gray-500 hover:border-green-300 hover:fill-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" /></svg>
                             </button>
-                            <div x-on:click="$wire.edit({{ $taskInList->id }})" wire:key="todayTask-{{ $taskInList->id }}" class="grow w-full flex rounded hover:bg-gray-700">
+                            <button 
+                                x-on:click="$wire.edit({{ $taskInList->id }})" 
+                                wire:key="todayTask-{{ $taskInList->id }}" 
+                                class="grow w-full flex rounded hover:bg-gray-700 text-left"
+                            >
                                 <div class="grow my-auto p-3 {{ $taskInList->status->id == $taskStatusClosed ? 'line-through' : '' }}">{{ $taskInList->name }}</div>
                                 <div class="grow-0 my-auto font-bold py-1 px-3 rounded text-right">{{ $taskInList->status ? $taskInList->status->name : '' }}</div>
-                            </div>
+                            </button>
                             
                         </div>
                         @endforeach
@@ -199,7 +207,7 @@
                     </div>
 
                     <!-- Dates Toggle Button -->
-                    <button @click="showDates = !showDates" class="mb-3 justify-self-end block sm:hidden text-gray-700 rounded hover:border focus:border focus:bg-gray-100" type="button" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle Task Dates">
+                    <button @click="showDates = !showDates" class="mb-3 justify-self-end block sm:invisible text-gray-700 rounded hover:border focus:border focus:bg-gray-100">
                         <svg class="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 248H128V192H48V248zM48 296V360H128V296H48zM176 296V360H272V296H176zM320 296V360H400V296H320zM400 192H320V248H400V192zM400 408H320V464H384C392.8 464 400 456.8 400 448V408zM272 408H176V464H272V408zM128 408H48V448C48 456.8 55.16 464 64 464H128V408zM272 192H176V248H272V192z"/></svg>    
                     </button>
 
@@ -265,22 +273,22 @@
                 wire:target="save, resetFormFields"
             >
 
-                <div class="mb-3 mt-3 pr-2 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden">
+                <section class="mb-3 mt-3 pr-2 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden" tabindex="0">
                     <h2 class="mb-3">{{ __('Details') }}</h2>
                     <x-forms.form-group>
                         <div x-data="{ currentTask: @entangle('currentTask').defer }">
                             <input id="details" name="details" type="hidden" x-model="currentTask.details" />
                             <div wire:ignore>
-                            <trix-editor class="trix-editor trix-content text-xs" x-model.debounce.300ms="currentTask.details"></trix-editor>
+                            <trix-editor tabindex="0" class="trix-editor trix-content text-xs" x-model.debounce.300ms="currentTask.details"></trix-editor>
                             </div>
                             @error ('currentTask.details') 
                                 <p id="details_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
                     </x-forms.form-group>
-                </div>
+                </section>
 
-                <div class="mb-3 mt-3 pr-2 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden bg-gray-100 p-2 -m-2 mr-0">
+                <section class="mb-3 mt-3 pr-2 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden bg-gray-100 p-2 -m-2 mr-0" tabindex="0">
                     <div class="flex w-full">
                         <h2 class="mb-3 grow">{{ __('Subtasks') }}</h2>
                     
@@ -351,7 +359,7 @@
                             @enderror
                         </div>
                     @endforeach
-                </div>
+                </section>
             </div>
         </x-slot>
 
