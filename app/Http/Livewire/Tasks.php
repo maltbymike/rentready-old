@@ -222,23 +222,19 @@ class Tasks extends Component
         // Save task
         $task->save();
 
-        $last_sort_order = 0;
-
         if ($this->subtaskOrderChanged == true) {
             
             foreach ($this->currentTask['subtasks'] as $key => $value) {
-                
-                // dd($key, $value);
                 $subtaskToChangeOrder = Task::find($value['id']);
                 $subtaskToChangeOrder->sort_order = $key;
                 $subtaskToChangeOrder->save();
-
-                $last_sort_order = $last_sort_order++;
             }
         
         }
 
         // Create new subtasks
+        $nextSortOrder = count($this->currentTask['subtasks']); 
+
         if (isset($this->subtask)) {
             foreach ($this->subtask as $s) {
 
@@ -254,16 +250,16 @@ class Tasks extends Component
                     endswitch;
                 }
 
-                $subtask->sort_order = $last_sort_order;
-                
-                $last_sort_order = $last_sort_order++;
+                // Set Sort Order
+                $subtask->sort_order = $nextSortOrder;
+                $nextSortOrder++;
 
                 // Set relationships
                 $subtask->parent()->associate($task->id);
+                $subtask->status()->associate($this->taskStatusOpen);
 
                 // Save subtask
                 $subtask->save();
-
             }
         }
 
@@ -313,30 +309,41 @@ class Tasks extends Component
 
     public function updateTaskStatusClosed($id)
     {
-        
+        // Get task to update
         $task = Task::with('parent', 'status')->find($id);
 
-        if ($task->status->id != $this->taskStatusClosed) {
-            $changeStatusTo = $this->taskStatusClosed;
-            $changeStatusText = 'Closed';
+        // Decide if we are opening or closing the task
+        if (isset($task->status->id)) {
+            if ($task->status->id != $this->taskStatusClosed) {
+                $changeStatusTo = $this->taskStatusClosed;
+                $changeStatusText = 'Closed';
+            } else {
+                $changeStatusTo = $this->taskStatusOpen;
+                $changeStatusText = 'Open';
+            }
         } else {
-            $changeStatusTo = $this->taskStatusOpen;
-            $changeStatusText = 'Open';
+            $changeStatusTo = $this->updateTaskStatusClosed;
+            $changeStatusText = 'Closed';
         }
-
         $task->status()->associate($changeStatusTo);
+        
+        // Save task
         $task->save();
 
+        // If current task has a parent refresh the subtask list
         if ($task->parent && $this->currentTask['id'] == $task->parent->id) {
             $this->currentTask['subtasks'] = $task->parent->children;
         }
 
+        // If this is the current task then refresh it's status id
         if (isset($this->currentTask['id']) && $id == $this->currentTask['id']) {
             $this->currentTask['statusId'] = $changeStatusTo;
         }
 
+        // Repopulate Tasks
         $this->getTasksList();
 
+        // Update user that task has been changed
         $this->dispatchBrowserEvent('alert',[
             'type' => 'success',
             'message' => $task->name . ": " . $changeStatusText . "!"

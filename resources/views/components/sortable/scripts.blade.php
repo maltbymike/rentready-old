@@ -5,7 +5,7 @@
             sortOrder: [],
             animation: 150,
             ghostClass: '',
-            dragHandle: null,
+            dragHandle: '.drag-handle',
             group: null,
             allowSort: true,
             allowDrop: true,
