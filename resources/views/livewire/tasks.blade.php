@@ -291,14 +291,8 @@
                     </x-forms.form-group>
                 </section>
 
-                <section class="mb-3 mt-3 pr-2 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden bg-gray-100 p-2 -m-2 mr-0" tabindex="0">
-                    <div class="flex w-full">
-                        <h2 class="mb-3 grow">{{ __('Subtasks') }}</h2>
-                    
-                        <div class="col-span-12 grow-0">
-                            <x-button wire:click.prevent="subtasksAdd({{ $i }})" class="">+ Add Subtask</x-button>
-                        </div>
-                    </div>
+                <section class="mb-3 mt-3 -ml-2 mr-0 p-2 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden bg-gray-100" tabindex="0">
+                    <h2 class="mb-3 grow">{{ __('Subtasks') }}</h2>
 
                     @isset($currentTask['subtasks'])
                         <x-laravel-blade-sortable::sortable
@@ -348,20 +342,28 @@
                         </x-laravel-blade-sortable::sortable>
                     @endisset
 
-                    @foreach ($subtasksNew as $key => $value)
-                        <div class="col-span-12 flex px-2 py-3">
-                            <x-forms.form-group class="grow">
-                                <x-forms.input type="text" id="subtask.{{ $value }}.name" name="subtask.{{ $value }}.name" wire:model.lazy="subtask.{{ $value }}.name" />
-                                <x-forms.label for="subtask.{{ $value }}.name">{{ __('New Subtask') }}</x-forms.label>
-                            </x-forms.form-group>
-                            <button wire:click.prevent="subtasksRemove({{ $key }})" class="flex justify-items-center items-center h-3 w-3 m-1 fill-gray-300 hover:fill-red-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
-                            </button>
-                            @error ('subtask.{{ $value }}.name')
-                                <p id="name_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    @endforeach
+                    <div class="col-span-12 flex px-2 py-3">
+                        <x-forms.form-group class="grow">
+                            <x-forms.input 
+                                type="text" 
+                                id="subtasknew.name" 
+                                name="subtasknew.name" 
+                                wire:model.lazy="subtasknew.name"
+                                wire:keydown.enter="saveSubtask({{ isset($currentTask['id']) ? $currentTask['id'] : '' }})"
+                            />
+                            <x-forms.label for="subtasknew.name">{{ __('New Subtask') }}</x-forms.label>
+                        </x-forms.form-group>
+                        <button 
+                            wire:click.prevent="saveSubtask({{ isset($currentTask['id']) ? $currentTask['id'] : '' }})" 
+                            class="flex justify-items-center items-center h-3 w-3 m-1 fill-gray-300 hover:fill-green-600"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
+                        </button>
+                        @error ('subtask.{{ $value }}.name')
+                            <p id="name_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                 </section>
             </div>
         </x-slot>

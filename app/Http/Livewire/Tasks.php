@@ -19,15 +19,14 @@ class Tasks extends Component
     public $currentTask = [];
     public $currentTaskId;
     public $tasks;
+    public $tasksGrouped;
     public $tasksToday;
     public $tasksTomorrow;
     public $tasksOverdue;
     public $tasksFuture;
     public $tasksWithNoDueDate;
 
-    public $i = 1;
-    public $subtasksNew = [];
-    public $subtask;
+    public $subtasknew = [];
     public $subtaskOrderChanged = false;
 
     public $showClosed = false;
@@ -47,7 +46,7 @@ class Tasks extends Component
         'currentTask.dateDue' => 'nullable|date|after_or_equal:currentTask.dateStart',
         'currentTask.dateStart' => 'nullable|date',
         'currentTask.subtasks.*.name' => 'required|min:5',
-        'subtask.*.name' => 'required',
+        'subtasknew.name' => 'sometimes|min:5',
     ];
 
     protected $validationAttributes = [
@@ -58,7 +57,7 @@ class Tasks extends Component
         "currentTask.dateDue" => 'Due Date',
         'currentTask.dateStart' => 'Start Date',
         'currentTask.subtasks.*.name' => 'Subtask Name',
-        'subtask.*.name' => 'Subtask Name',
+        'subtasknew.name' => 'Subtask Name',
     ];
 
     public function edit($id)
@@ -95,6 +94,16 @@ class Tasks extends Component
         $this->tasksOverdue = $this->getOverdueTasks();
         $this->tasksFuture = $this->getFutureTasks();
         $this->tasksWithNoDueDate = $this->getTasksWithNoDueDate();
+    }
+
+    protected function getTasksGroupedByDueDate()
+    {
+        $return = [
+            'Overdue' => [],
+            'Today' => [],
+        ];
+
+
     }
 
     protected function getOverdueTasks()
@@ -182,7 +191,7 @@ class Tasks extends Component
     public function resetFormFields()
     {
         $this->resetValidation();
-        $this->resetExcept('taskStatuses', 'taskStatusClosed', 'taskStatusOpen');
+        $this->resetExcept('taskStatuses', 'taskStatusClosed', 'taskStatusOpen', 'showClosed');
         $this->getTasksList();
         $this->currentTask['statusId'] = $this->taskStatusOpen;
     }
@@ -232,49 +241,20 @@ class Tasks extends Component
         
         }
 
-        // Create new subtasks
-        $nextSortOrder = count($this->currentTask['subtasks']); 
-
-        if (isset($this->subtask)) {
-            foreach ($this->subtask as $s) {
-
-                // Create new task on model
-                $subtask = New Task;
-                
-                // Determine which fields were entered and set the appropriate values on the subtask
-                foreach ($s as $key => $value) {
-                    switch ($key):
-                        case 'name':
-                            $subtask->name = $value;
-                            break;
-                    endswitch;
-                }
-
-                // Set Sort Order
-                $subtask->sort_order = $nextSortOrder;
-                $nextSortOrder++;
-
-                // Set relationships
-                $subtask->parent()->associate($task->id);
-                $subtask->status()->associate($this->taskStatusOpen);
-
-                // Save subtask
-                $subtask->save();
-            }
+        // Create new subtask if needed
+        if (!empty($this->subtasknew)) {
+            $this->saveSubtask($task->id);
         }
 
         // Repopulate tasks
         $this->getTasksList();
 
-        // Reset form fields if the option was set
-        // if ($clear == true) {
-            $this->resetFormFields();
-        // }
+        // Reset form fields
+        $this->resetFormFields();
 
         // If we created a new task then load the newly created 
         // task, otherwise clicking save again will create another new task
         if ($clear != true) {
-        // if ($clear != true && $id == null) {
             $this->edit($task->id);
         }
         
@@ -285,17 +265,35 @@ class Tasks extends Component
         ]);
     }
 
-    public function subtasksAdd($i)
+    public function saveSubtask($parentId = null)
     {
-        $i = $i + 1;
-        $this->i = $i;
-        array_push($this->subtasksNew, $i);
-        $this->emit('set-focus-on-new-subtask', $i);
-    }
 
-    public function subtasksRemove($i)
-    {
-        unset($this->subtasksNew[$i]);
+        // Create new task on model
+        $subtask = New Task;
+        
+        // Determine which fields were entered and set the appropriate values on the subtask
+        foreach ($this->subtasknew as $key => $value) {
+            switch ($key):
+                case 'name':
+                    $subtask->name = $value;
+                    break;
+            endswitch;
+        }
+
+        // Set Sort Order
+        $subtask->sort_order = count($this->currentTask['subtasks']);
+
+        // Set relationships
+        $subtask->parent()->associate($parentId);
+        $subtask->status()->associate($this->taskStatusOpen);
+
+        // Save subtask
+        $subtask->save();
+
+        $this->currentTask['subtasks'] = $subtask->parent->children;
+
+        unset($this->subtasknew);
+    
     }
 
     public function toggleShowClosed()
