@@ -79,6 +79,11 @@ class Tasks extends Component
         $this->showTaskDialog = true;
     }
 
+    protected function getCurrentDate($addDays = 0)
+    {
+        return now('America/Toronto')->addDays($addDays)->format("Y-m-d");
+    }
+
     protected function getTasksList()
     {
         $tasks = Task::with('status', 'children');
@@ -96,39 +101,36 @@ class Tasks extends Component
         $this->tasksWithNoDueDate = $this->getTasksWithNoDueDate();
     }
 
-    protected function getTasksGroupedByDueDate()
-    {
-        $return = [
-            'Overdue' => [],
-            'Today' => [],
-        ];
-
-
-    }
-
     protected function getOverdueTasks()
     {
         return $this->tasks
-            ->where('date_due', '<', now('America/Toronto')->format("Y-m-d"))
+            ->where('date_due', '<', $this->getCurrentDate())
             ->where('date_due', '!=', NULL);
     }
 
     protected function getTodaysTasks()
     {
-        return $this->tasks->where('date_due', '>=', now('America/Toronto')->format("Y-m-d"))
+        return $this->tasks->where('date_due', '>=', $this->getCurrentDate())
                            ->filter(function($value, $key) {
-                                if ($value->date_start <= now('America/Toronto')->format("Y-m-d") and $value->date_start != NULL) {
+
+                                // Include tasks with start date today or earlier and due date today or later 
+                                if ($value->date_start <= $this->getCurrentDate() and $value->date_start != NULL) {
+                                    return true;
+                                }
+
+                                // Always include tasks with today as a due date
+                                if ($value->date_due == $this->getCurrentDate()) {
                                     return true;
                                 }
                            })
-                           ->where('date_start', '<=', now('America/Toronto')->format("Y-m-d"));
+                           ->where('date_start', '<=', $this->getCurrentDate());
     }
 
     protected function getTomorrowsTasks()
     {
-        return $this->tasks->where('date_due', now('America/Toronto')->addDays(1)->format("Y-m-d"))
+        return $this->tasks->where('date_due', $this->getCurrentDate(1))
                            ->filter(function($value, $key) {
-                                if ($value->date_start > now('America/Toronto')->format("Y-m-d") or $value->date_start == NULL) {
+                                if ($value->date_start > $this->getCurrentDate() or $value->date_start == NULL) {
                                     return true;
                                 }
                            });
@@ -136,9 +138,9 @@ class Tasks extends Component
 
     protected function getFutureTasks()
     {
-        return $this->tasks->where('date_due', '>', now('America/Toronto')->addDays(1)->format("Y-m-d"))
+        return $this->tasks->where('date_due', '>', $this->getCurrentDate())
                            ->filter(function($value, $key) {
-                                if ($value->date_start > now('America/Toronto')->format("Y-m-d") or $value->date_start == NULL) {
+                                if ($value->date_start > $this->getCurrentDate() or $value->date_start == NULL) {
                                     return true;
                                 }
                            });
