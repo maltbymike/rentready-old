@@ -1,3 +1,8 @@
+@props([
+    'tasks',
+    'closed'
+])
+
 <div class="w-full p-3 pr-0">{{ $slot }}
     @foreach ($tasks as $taskInList)
     

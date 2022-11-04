@@ -159,12 +159,13 @@
                     <div class="mb-3 lg:col-start-4" x-show="showDates" x-transition.duration.300ms>
                         <x-forms.form-group>
                             <x-forms.select id="task_repeats" name="task_repeats" wire:model="currentTask.repeats">
-                                <option value=""></option>
+                                <option value="">Does Not Repeat</option>
                                 <option value="daily">Daily</option>
                                 <option value="weekly">Weekly</option>
                                 <option value="monthly">Monthly</option>
                                 <option value="yearly">Yearly</option>
-                                <option value="periodically">Periodically</option>                                
+                                <option value="weekdays">Every Weekday</option>
+                                <option value="periodically">Periodically</option>
                             </x-forms.select>
                             <x-forms.label for="task_repeats">{{ __('Repeats') }}</x-forms.label>
                         </x-forms.form-group>
