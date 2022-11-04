@@ -159,15 +159,15 @@
                     <div class="mb-3 lg:col-start-4" x-show="showDates" x-transition.duration.300ms>
                         <x-forms.form-group>
                             <x-forms.select id="task_repeats" name="task_repeats" wire:model="currentTask.repeats">
-                                <option value="">Does Not Repeat</option>
-                                <option value="daily">Daily</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="yearly">Yearly</option>
-                                <option value="weekdays">Every Weekday</option>
-                                <option value="periodically">Periodically</option>
+                                <option value="">{{ __('Does Not Repeat') }}</option>
+                                <option value="daily">{{ __('Daily') }}</option>
+                                <option value="weekly">{{ __('Weekly') }}</option>
+                                <option value="monthly">{{ __('Monthly') }}</option>
+                                <option value="yearly">{{ __('Yearly') }}</option>
+                                <option value="weekdays">{{ __('Every Weekday') }}</option>
+                                <option value="custom">{{ __('Custom') }}</option>
                             </x-forms.select>
-                            <x-forms.label for="task_repeats">{{ __('Repeats') }}</x-forms.label>
+                            <x-forms.label for="task_repeats">{{ __('Task Repeats') }}</x-forms.label>
                         </x-forms.form-group>
                     </div>
 
@@ -177,7 +177,7 @@
                             <x-forms.input id="date_start" name="date_start" type="date" wire:model="currentTask.dateStart" />
                             <x-forms.label for="date_start">{{ __('Start Date') }}</x-forms.label>
                         </x-forms.form-group>
-                        @error ('currentTask.dateStart') 
+                        @error ('currentTask.dateStart')
                             <p id="date_start_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

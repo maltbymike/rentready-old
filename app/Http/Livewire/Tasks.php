@@ -43,6 +43,7 @@ class Tasks extends Component
         'currentTask.name' => 'required|min:5',
         'currentTask.details' => 'nullable|string',
         'currentTask.statusId' => 'required|integer',
+        'currentTask.task_repeats' => 'nullable|in:daily,weekly,monthly,yearly,workdays,custom',
         'currentTask.dateDue' => 'nullable|date|after_or_equal:currentTask.dateStart',
         'currentTask.dateStart' => 'nullable|date',
         'currentTask.subtasks.*.name' => 'required|min:5',
@@ -54,6 +55,7 @@ class Tasks extends Component
         'currentTask.name' => 'Task Name',
         'currentTask.details' => 'Task Details',
         'currentTask.statusId' => 'Task Status',
+        'currentTask.task_repeats' => 'Task Repeats',
         "currentTask.dateDue" => 'Due Date',
         'currentTask.dateStart' => 'Start Date',
         'currentTask.subtasks.*.name' => 'Subtask Name',
@@ -72,6 +74,7 @@ class Tasks extends Component
         $this->currentTask['dateStart'] = $task->date_start;
         $this->currentTask['dateDue'] = $task->date_due;
         $this->currentTask['details'] = $task->details;
+        $this->currentTask['repeats'] = $task->repeats;
         $this->currentTask['subtasks'] = $task->children->toArray();
 
         $this->currentTaskId = $task->id; // Until livewire queryString supports multidimensional arrays properly we need to set it as a separate public variable
@@ -223,6 +226,9 @@ class Tasks extends Component
                     break;
                 case 'details':
                     $task->details = $value;
+                    break;
+                case 'repeats':
+                    $task->repeats = $value;
                     break;
             endswitch;
         }
