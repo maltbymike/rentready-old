@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use App\Models\Task;
 use App\Models\TaskStatus;
 
+use Carbon\Carbon;
+
 use Livewire\Component;
 
 use Alert;
@@ -61,6 +63,7 @@ class Tasks extends Component
         'currentTask.subtasks.*.name' => 'Subtask Name',
         'subtasknew.name' => 'Subtask Name',
     ];
+    
 
     public function edit($id)
     {
@@ -201,6 +204,66 @@ class Tasks extends Component
         $this->currentTask['statusId'] = $this->taskStatusOpen;
     }
 
+    protected function updateTaskStatus($task, $statusId)
+    {
+        // Perform additional tasks if status is being updated to closed
+        if ($statusId == $this->taskStatusClosed) {
+
+            // Create new task if the task being closed has been set to repeat
+            if ($task->repeats != null) {
+
+                // Replicate task
+                $newTask = $task->replicateTask($this->taskStatusOpen);
+
+                // Set start and due dates on new task
+                switch ($task->repeats) {
+                    case 'daily':
+                        $newTask->date_due = Carbon::createFromFormat('Y-m-d', $task->date_due)
+                                                ->addDay()
+                                                ->format('Y-m-d');
+                        break;
+                    case 'weekly':
+                        $newTask->date_due = Carbon::createFromFormat('Y-m-d', $task->date_due)
+                                                ->addWeek()
+                                                ->format('Y-m-d');
+                        break;
+                    case 'monthly':
+                        $newTask->date_due = Carbon::createFromFormat('Y-m-d', $task->date_due)
+                                                ->addMonth()
+                                                ->format('Y-m-d');
+                        break;
+                    case 'yearly':
+                        $newTask->date_due = Carbon::createFromFormat('Y-m-d', $task->date_due)
+                                                ->addYear()
+                                                ->format('Y-m-d');
+                        break;
+                    case 'weekdays':
+                        $newTask->date_due = Carbon::createFromFormat('Y-m-d', $task->date_due)
+                                                ->addWeekday()
+                                                ->format('Y-m-d');
+                        break;
+                    case 'custom':
+                }
+
+                $newTask->save();
+
+                // Set repeats on closed task to null so that if it is ever reopened it will
+                // Not create additional tasks when it is reclosed
+                $task->repeats = null;
+
+            }
+
+            // Set closed at timestamp
+            $task->closed_at = now();
+        }
+        
+        // Update Task Status
+        $task->status()->associate($statusId);
+
+        // Return modified task
+        return $task;
+    }
+
     public function save($id = null, $clear = false)
     {
         $this->validate();
@@ -233,9 +296,9 @@ class Tasks extends Component
             endswitch;
         }
 
-        // Set relationships
-        $task->status()->associate($this->currentTask['statusId']);
-                
+        // Update Task Status
+        $task = $this->updateTaskStatus($task, $this->currentTask['statusId']);
+        
         // Save task
         $task->save();
 
