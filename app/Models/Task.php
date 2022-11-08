@@ -15,6 +15,10 @@ class Task extends Model
         return $this->hasMany(Task::class, 'parent_id')->orderBy('sort_order');
     }
 
+    public function lists() {
+        return $this->belongsToMany(TaskList::class, 'task_lists_tasks', 'task_id', 'task_list_id');
+    }
+
     public function parent() {
         return $this->belongsTo(Task::class, 'parent_id');
     }

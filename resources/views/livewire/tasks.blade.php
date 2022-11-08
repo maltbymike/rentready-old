@@ -40,8 +40,8 @@
     >
 
         <div class="max-w-7xl mx-auto">
-            <div class="flex w-full justify-between">
-                <div class="p-3">{{ __('Tasks') }}</div>
+            <div class="flex w-full justify-between bg-slate-900">
+                <h1 class="p-3 font-bold text-orange-500">{{ __('Tasks') }}</h1>
                 <x-button wire:click.prevent="toggleShowClosed" class="m-1">
                     @empty($showClosed)
                         {{ __('Show Completed') }}
@@ -51,38 +51,38 @@
                 </x-button>
             </div>
 
-            <div x-data class="bg-slate-800">
+            <div x-data class="bg-slate-800 text-xs grid grid-cols-[min-content_auto_max-content_min-content] items-center">
                 @if ($tasksOverdue->isNotEmpty())
-                    <x-tasks.task-group :tasks="$tasksOverdue" :closed="$taskStatusClosed">
+                    <x-tasks.task-group :tasks="$tasksOverdue" :closed="$taskStatusClosed" :statuses="$taskStatuses">
                         {{ __('Overdue') }}
                     </x-tasks.task-group>
                 @endif
 
                 @if ($tasksToday->isNotEmpty())
-                    <x-tasks.task-group :tasks="$tasksToday" :closed="$taskStatusClosed">
+                    <x-tasks.task-group :tasks="$tasksToday" :closed="$taskStatusClosed" :statuses="$taskStatuses">
                         {{ __('Today') }}
                     </x-tasks.task-group>
                 @endif
                 
                 @if ($tasksTomorrow->isNotEmpty())
-                    <x-tasks.task-group :tasks="$tasksTomorrow" :closed="$taskStatusClosed">
+                    <x-tasks.task-group :tasks="$tasksTomorrow" :closed="$taskStatusClosed" :statuses="$taskStatuses">
                         {{ __('Tomorrow') }}
                     </x-tasks.task-group>
                 @endif
 
                 @if ($tasksFuture->isNotEmpty())
-                    <x-tasks.task-group :tasks="$tasksFuture" :closed="$taskStatusClosed">
+                    <x-tasks.task-group :tasks="$tasksFuture" :closed="$taskStatusClosed" :statuses="$taskStatuses">
                         {{ __('Upcoming') }}
                     </x-tasks.task-group>
                 @endif
 
                 @if ($tasksWithNoDueDate->isNotEmpty())
-                    <x-tasks.task-group :tasks="$tasksWithNoDueDate" :closed="$taskStatusClosed">
+                    <x-tasks.task-group :tasks="$tasksWithNoDueDate" :closed="$taskStatusClosed" :statuses="$taskStatuses">
                         {{ __('No Due Date Set') }}
                     </x-tasks.task-group>
                 @endif
 
-                <x-button wire:click.prevent="resetFormFields" class="mt-8 w-full">
+                <x-button wire:click.prevent="resetFormFields" class="mt-8 col-span-full">
                     {{ __('+ Add Task') }}
                 </x-button>
 
