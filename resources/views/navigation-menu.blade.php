@@ -62,10 +62,7 @@
                             </x-slot>
                         </x-jet-dropdown>
                     </div>
-                    
-                    <x-jet-nav-link href="{{ route('tasks') }}" :active="request()->routeIs('tasks')">
-                        {{ __('Tasks') }}
-                    </x-jet-nav-link>
+
                 </div>
             </div>
 

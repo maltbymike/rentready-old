@@ -1,11 +1,7 @@
 <x-jet-form-section submit="createTaskList">
-    <x-slot name="title">
-        {{ __('Task List') }}
-    </x-slot>
-
-    <x-slot name="description">
-        {{ __('Create a new task list to keep things organized.') }}
-    </x-slot>
+    
+    <x-slot name="title">{{ __('Task List') }}</x-slot>
+    <x-slot name="description">{{ __('Create a new task list to keep things organized.') }}</x-slot>
 
     <x-slot name="form">
         
