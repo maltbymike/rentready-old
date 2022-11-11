@@ -114,9 +114,42 @@
                     class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 pt-3 mb-3"
                 >
 
+                    <!-- Task Lists -->
+                    <div class="mb-3 col-span-full flex items-center gap-2">
+
+                        @empty($currentTask['lists'])
+                            <div class="text-sm text-gray-300">
+                                {{ __('Assign Task to List') }}
+                            </div>
+                        @else                            
+                            @foreach($currentTask['lists'] as $list)
+                                <div class="text-sm border p-1">{{ $list['name'] }}</div>
+                            @endforeach
+                        @endempty
+                        
+                        <x-jet-dropdown align="top" width="w-max">    
+                            <x-slot name="trigger">
+                                <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                            </x-slot>
+                            
+                            <x-slot name="content">
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('Select Task List') }}
+                                </div>
+
+                                @foreach($taskLists as $taskList)
+                                    <x-jet-dropdown-link wire:click.prevent="assignTaskToList({{ $taskList['id'] }})" href="#">
+                                        {{ $taskList['name'] }}
+                                    </x-jet-dropdown-link>
+                                @endforeach
+                            </x-slot>
+                        </x-jet-dropdown>
+
+                    </div>
+
                     <!-- Task Status -->        
                     <div class="mb-3 col-span-2 sm:col-span-1">
-                    
+
                         <div class="w-full flex gap-3">
                             
                             <!-- Task Status Dropdown -->

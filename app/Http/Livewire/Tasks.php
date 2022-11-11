@@ -3,7 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\Task;
+use App\Models\TaskList;
 use App\Models\TaskStatus;
+
+use Illuminate\Http\Request;
 
 use Carbon\Carbon;
 
@@ -17,6 +20,8 @@ class Tasks extends Component
     public $taskStatuses;
     public $taskStatusClosed;
     public $taskStatusOpen;
+
+    public $taskLists = [];
 
     public $currentTask = [];
     public $currentTaskId;
@@ -64,13 +69,25 @@ class Tasks extends Component
         'subtasknew.name' => 'Subtask Name',
     ];
     
+    public function assignTaskToList(TaskList $taskList)
+    {
+        // Associate tasklist with task
+        $taskList->tasks()->attach($this->currentTaskId);
+        $taskList->save();
+
+        // Send alert message
+        $this->dispatchBrowserEvent('alert',[
+            'type'=>'success',
+            'message'=> "Assigned task to " . $taskList->name . " List"
+        ]);
+    }
 
     public function edit($id)
     {
         $this->updateMode = true;
         $this->resetValidation();
 
-        $task = Task::with('status', 'children')->find($id);
+        $task = Task::with('status', 'children', 'lists')->find($id);
         $this->currentTask['id'] = $task->id;
         $this->currentTask['name'] = $task->name;
         $this->currentTask['statusId'] = $task->status->id;
@@ -79,6 +96,7 @@ class Tasks extends Component
         $this->currentTask['details'] = $task->details;
         $this->currentTask['repeats'] = $task->repeats;
         $this->currentTask['subtasks'] = $task->children->toArray();
+        $this->currentTask['lists'] = $task->lists->toArray();
 
         $this->currentTaskId = $task->id; // Until livewire queryString supports multidimensional arrays properly we need to set it as a separate public variable
 
@@ -92,7 +110,7 @@ class Tasks extends Component
 
     protected function getTasksList()
     {
-        $tasks = Task::with('status', 'children');
+        $tasks = Task::with('status', 'children',);
         $tasks = $tasks->where('parent_id', '=', null);
         
         if ($this->showClosed != true)
@@ -170,8 +188,14 @@ class Tasks extends Component
         $this->subtaskOrderChanged = true;
     }
 
-    public function mount()
+    public function mount(Request $request)
     {
+        // Get task lists that have been assigned to the current team
+        $this->taskLists = TaskList::select('id', 'name')
+                                ->Where('team_id', $request->user()->currentTeam->id)
+                                ->get()
+                                ->toArray();
+
         $this->taskStatuses = TaskStatus::all();
         $this->taskStatusClosed = $this->taskStatuses->firstWhere('name', 'Closed')->id;
         $this->taskStatusOpen = $this->taskStatuses->firstWhere('name', 'Open')->id;
@@ -199,7 +223,7 @@ class Tasks extends Component
     public function resetFormFields()
     {
         $this->resetValidation();
-        $this->resetExcept('taskStatuses', 'taskStatusClosed', 'taskStatusOpen', 'showClosed');
+        $this->resetExcept('taskStatuses', 'taskStatusClosed', 'taskStatusOpen', 'showClosed', 'taskLists');
         $this->getTasksList();
         $this->currentTask['statusId'] = $this->taskStatusOpen;
     }
