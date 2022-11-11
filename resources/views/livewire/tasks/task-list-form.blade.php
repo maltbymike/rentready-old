@@ -1,10 +1,12 @@
-<x-jet-form-section submit="createTaskList">
+<x-jet-form-section submit="saveTaskList">
     
-    <x-slot name="title">{{ __('Task List') }}</x-slot>
-    <x-slot name="description">{{ __('Create a new task list to keep things organized.') }}</x-slot>
+    <x-slot name="title">{{ __('Task List Settings') }}</x-slot>
+    <x-slot name="description"></x-slot>
 
     <x-slot name="form">
-        
+
+        <input type="hidden" name="id" wire:model.defer="state.id" />
+
         <div class="col-span-6">
             <x-jet-label for="name" value="{{ __('List Name') }}" />
             <x-jet-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.name" autofocus />
@@ -32,7 +34,7 @@
     <x-slot name="actions">
 
         <x-jet-button>
-            {{ __('Create') }}
+            {{ isset($state['id']) != null ? __('Save') : __('Create') }}
         </x-jet-button>
 
     </x-slot>

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Tasks;
 
 use Livewire\Component;
 use Illuminate\Http\Request;
+use App\Models\TaskList;
 
 class ShowTaskLists extends Component
 {
@@ -14,16 +15,21 @@ class ShowTaskLists extends Component
      */
     public $taskLists = [];
 
-
     /**
-     * Create the component instance.
-     *
-     * @param  array $taskLists
-     * @return void
+     * Set event listeners to respond to.
+     * 
+     * @var array
      */
-    public function __construct($taskLists)
+    protected $listeners = ['reloadTaskLists'];
+
+
+    public function reloadTaskLists(Request $request)
     {
-        $this->taskLists = $taskLists;
+        // Get task lists that have been assigned to the current team
+        $this->taskLists = TaskList::select('id', 'name')
+            ->Where('team_id', $request->user()->currentTeam->id)
+            ->get()
+            ->toArray();
     }
 
     /**
