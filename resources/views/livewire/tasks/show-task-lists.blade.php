@@ -5,7 +5,7 @@
 
     <x-slot name="content">
         
-        <div class="col-span-full border border-gray-200 shadow rounded flex gap-1 flex-col">
+        <div class="col-span-full rounded flex flex-col">
         
             @foreach ($taskLists as $taskList)
                 <x-tasks.lists.single-item 

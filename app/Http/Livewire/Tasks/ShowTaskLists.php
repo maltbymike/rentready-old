@@ -28,6 +28,7 @@ class ShowTaskLists extends Component
         // Get task lists that have been assigned to the current team
         $this->taskLists = TaskList::select('id', 'name')
             ->Where('team_id', $request->user()->currentTeam->id)
+            ->withCount('tasks')
             ->get()
             ->toArray();
     }

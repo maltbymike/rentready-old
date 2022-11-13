@@ -9,7 +9,8 @@
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
             
             @livewire('tasks.task-list-form')
-            <x-jet-section-border />
+            
+            <x-section-border />
 
             @livewire('tasks.show-task-lists', ['taskLists' => $taskLists])
 

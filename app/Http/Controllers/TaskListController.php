@@ -26,9 +26,10 @@ class TaskListController extends Controller
         // Get task lists that have been assigned to the current team
         $this->taskLists = TaskList::select('id', 'name')
                                 ->Where('team_id', $request->user()->currentTeam->id)
+                                ->withCount('tasks')
                                 ->get()
                                 ->toArray();
-
+        
         // Render the component
         return view('tasks.task-lists', [
             'taskLists' => $this->taskLists,
