@@ -21,7 +21,7 @@ class TaskListController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
      */
-    public function show(Request $request)
+    public function index(Request $request)
     {
         // Get task lists that have been assigned to the current team
         $this->taskLists = TaskList::select('id', 'name')
@@ -31,8 +31,22 @@ class TaskListController extends Controller
                                 ->toArray();
         
         // Render the component
-        return view('tasks.task-lists', [
+        // return view('tasks.task-lists', [
+        //     'taskLists' => $this->taskLists,
+        // ]);
+        return view('tasks.lists.index', [
             'taskLists' => $this->taskLists,
         ]);
+    }
+
+    /**
+     * Show task list screen with tasks
+     * 
+     * @param \App\Models\TaskList  $list
+     * @return \Illuminate\View\View
+     */
+    public function show(TaskList $list)
+    {
+        return view('tasks.lists.show');
     }
 }

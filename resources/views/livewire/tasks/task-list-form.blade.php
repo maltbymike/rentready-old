@@ -33,9 +33,21 @@
 
     <x-slot name="actions">
 
-        <x-jet-button>
-            {{ isset($state['id']) != null ? __('Save') : __('Create') }}
-        </x-jet-button>
+        <div class="flex gap-3">
+            
+            <x-jet-danger-button 
+                wire:click.prevent="clear" 
+                wire:loading.attr="disabled"
+                wire:click.target="clear"
+            >
+                {{ __('Clear') }}
+            </x-jet-danger-button>
+
+            <x-jet-button>
+                {{ isset($state['id']) != null ? __('Save') : __('Create') }}
+            </x-jet-button>
+
+        </div>
 
     </x-slot>
 </x-jet-form-section>

@@ -31,6 +31,6 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('/tasks', Tasks::class)->name('tasks');
-    Route::get('/tasks/lists', [TaskListController::class, 'show'])->name('tasks.lists');
+    Route::get('/tasks/lists', [TaskListController::class, 'index'])->name('tasks.lists');
 
 });

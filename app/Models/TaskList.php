@@ -14,4 +14,8 @@ class TaskList extends Model
     public function tasks() {
         return $this->belongsToMany(Task::class, 'task_lists_tasks', 'task_list_id', 'task_id');
     }
+
+    public function team() {
+        return $this->belongsTo(Team::class, 'team_id');
+    }
 }
