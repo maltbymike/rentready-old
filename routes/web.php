@@ -32,5 +32,6 @@ Route::middleware([
 
     Route::get('/tasks', Tasks::class)->name('tasks');
     Route::get('/tasks/lists', [TaskListController::class, 'index'])->name('tasks.lists');
+    Route::get('/tasks/list/{list}', [TaskListController::class, 'show'])->name('tasks.list');
 
 });

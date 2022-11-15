@@ -31,9 +31,6 @@ class TaskListController extends Controller
                                 ->toArray();
         
         // Render the component
-        // return view('tasks.task-lists', [
-        //     'taskLists' => $this->taskLists,
-        // ]);
         return view('tasks.lists.index', [
             'taskLists' => $this->taskLists,
         ]);
@@ -47,6 +44,10 @@ class TaskListController extends Controller
      */
     public function show(TaskList $list)
     {
-        return view('tasks.lists.show');
+        $list->load('tasks');
+
+        return view('tasks.lists.show', [
+            'list' => $list,
+        ]);
     }
 }

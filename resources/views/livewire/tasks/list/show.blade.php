@@ -1,18 +1,17 @@
 <x-page-section>
-    
-    <x-slot name="title">{{ $user->currentTeam->name }}'s {{ __('Task Lists') }}</x-slot>
+
+    <x-slot name="title">{{ $list->name }}</x-slot>
     <x-slot name="description"></x-slot>
 
     <x-slot name="content">
-        
+
         <div class="col-span-full rounded flex flex-col">
         
-            @foreach ($taskLists as $taskList)
-                <x-single-item
-                    wire:key="taskList-{{ $taskList['id'] }}"
-                    wire:click.prevent="showTaskList({{ $taskList['id'] }})"
+            @foreach ($list->tasks as $task)
+                <x-single-item 
+                    wire:key="task-{{ $task['id'] }}"
                 >
-                    {{ $taskList['name'] }}
+                    {{ $task['name'] }}
 
                     <div 
                         class="flex
@@ -24,7 +23,7 @@
                                 hover:text-primary
                                 peer-active:bg-gray-900 
                                 peer-active:text-white" 
-                        title="{{ $taskList['tasks_count'] }} Tasks"
+                        title="{{ $task['tasks_count'] }} Tasks"
                     >
                         <svg 
                             class="h-3 w-3" 
@@ -37,14 +36,14 @@
                         
                         </svg>
 
-                        <div class="text-xs">{{ $taskList['tasks_count'] }}</div>
+                        <div class="text-xs">{{ $task['tasks_count'] }}</div>
 
                     </div>
 
                     <x-slot name="end">
-                        
+                    
                         <button 
-                            wire:click="$emit('loadTaskList', '{{ $taskList['id'] }}')"
+                            wire:click="$emit('loadTaskList', '{{ $task['id'] }}')"
                             class="h-4 w-4 m-2 hover:fill-primary active:fill-gray-900" 
                             title="Task List Settings"
                         >

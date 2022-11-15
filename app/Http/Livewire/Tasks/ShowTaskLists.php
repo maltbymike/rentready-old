@@ -45,4 +45,15 @@ class ShowTaskLists extends Component
             'user' => $request->user(),
         ]);
     }
+
+    /**
+     * Redirect to the task list
+     * 
+     * @param integer $id
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function showTaskList($id)
+    {
+        return redirect()->route('tasks.list', ['list' => $id]);
+    }
 }
