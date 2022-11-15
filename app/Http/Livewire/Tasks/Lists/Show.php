@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Tasks\List;
+namespace App\Http\Livewire\Tasks\Lists;
 
 use Livewire\Component;
 
@@ -11,6 +11,6 @@ class Show extends Component
 
     public function render()
     {
-        return view('livewire.tasks.list.show');
+        return view('livewire.tasks.lists.show');
     }
 }
