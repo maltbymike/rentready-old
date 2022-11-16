@@ -10,6 +10,7 @@
             @foreach ($list->tasks as $task)
                 <x-single-item 
                     wire:key="task-{{ $task['id'] }}"
+                    wire:click.prevent="$emit('showTask', {{ $task['id'] }})"
                 >
                     {{ $task['name'] }}
 
