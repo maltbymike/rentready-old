@@ -32,23 +32,20 @@
     titleClass="bg-gray-100"
     contentClass="lg:overflow-y-hidden"
 >
-    
+
     <x-slot name="title">
         
-        <div 
-            class="wrapper bg-white p-3 -m-3 mb-0"
-            wire:loading.class="opacity-50"
-            wire:target="save, resetFormFields"
-        >
+        <div class="wrapper bg-white p-3 -m-3 mb-0">
         
             <div 
                 x-data="{ showDates : false, maybeShow() { this.showDates = window.innerWidth > 640 } }"
                 @resize.window="maybeShow()"
                 x-init="maybeShow()"
-                class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 pt-3 mb-3"
+                class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-3"
             >
 
                 <!-- Task Lists -->
+                <div class="scale-75 text-gray-500 text-sm origin-[0] -mb-3">Lists</div>
                 <div class="mb-3 col-span-full flex items-center gap-2">
 
                     @empty($currentTask['lists'])
@@ -56,14 +53,23 @@
                             {{ __('Assign Task to List') }}
                         </div>
                     @else                            
-                        @foreach($currentTask['lists'] as $list)
-                            <div class="text-sm border p-1">{{ $list['name'] }}</div>
-                        @endforeach
+                        <div class="text-xs flex gap-3">
+                            @foreach($currentTask['lists'] as $list)
+                                <div class="flex items-center gap-2 border rounded p-1 @if ($loop->first) -ml-1 @endif max-w-[10rem] hover:shadow-md hover:max-w-full">
+                                    <span class="grow whitespace-nowrap overflow-hidden text-ellipsis hover:overflow-visible">{{ $list['name'] }}</span>
+                                    <button class="grow-0 hover:fill-primary" wire:click.prevent="removeTaskFromList({{ $list['id'] }})" title="{{ __('Remove task from ') . $list['name']}}">
+                                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
                     @endempty
-                    
-                    <x-jet-dropdown align="top" width="w-max">    
+
+                    <x-jet-dropdown width="w-max">
                         <x-slot name="trigger">
-                            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                            <button class="hover:fill-primary -m-1 p-1 border rounded hover:shadow-md" title="{{ __('Assign task to new list') }}">
+                                <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                            </button>
                         </x-slot>
                         
                         <x-slot name="content">
@@ -78,10 +84,10 @@
                             @endforeach
                         </x-slot>
                     </x-jet-dropdown>
-
+                                    
                 </div>
 
-                <!-- Task Status -->        
+                <!-- Task Status -->
                 <div class="mb-3 col-span-2 sm:col-span-1">
 
                     <div class="w-full flex gap-3">
@@ -91,22 +97,26 @@
                             <x-forms.select 
                                 id="task_status_id" 
                                 name="task_status_id" 
-                                wire:model="currentTask.statusId"
+                                wire:model="currentTask.task_status_id"
                             >
                                 @foreach ($taskStatuses as $status)
                                     <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                @endforeach
+                                 @endforeach
                             </x-forms.select>
                             <x-forms.label for="task_status_id">{{ __('Status') }}</x-forms.label>
                         </x-forms.form-group>
-                        
+                                                            
                         <!-- Task Status Checkbox -->
-                        @if (isset($currentTask['statusId']) && $currentTask['statusId'] != $taskStatusClosed)
-                            <button wire:click="updateTaskStatusClosed({{ isset($currentTask['id']) ? $currentTask['id'] : '' }})" class="grow-0 flex justify-items-center items-center" aria-label="Mark task closed">
+                        @empty ($currentTask['closed_at'])
+                            <button 
+                                wire:click="updateTaskStatusClosed({{ isset($currentTask['id']) ? $currentTask['id'] : '' }})" 
+                                class="grow-0 flex justify-items-center items-center" 
+                                aria-label="Mark task closed"
+                            >
                                 <svg class="h-6 w-6 border-2 border-gray-300 rounded fill-gray-200 hover:border-green-300 hover:fill-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
                             </button>
-                        @endif    
-
+                        @endempty
+                        
                     </div>
 
                     @error ('currentTask.statusId') 
@@ -119,7 +129,7 @@
                     @click="showDates = !showDates" 
                     class="mb-3 justify-self-end block text-gray-700 sm:invisible rounded hover:border focus:border focus:bg-gray-100"
                 >
-                    <svg class="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 248H128V192H48V248zM48 296V360H128V296H48zM176 296V360H272V296H176zM320 296V360H400V296H320zM400 192H320V248H400V192zM400 408H320V464H384C392.8 464 400 456.8 400 448V408zM272 408H176V464H272V408zM128 408H48V448C48 456.8 55.16 464 64 464H128V408zM272 192H176V248H272V192z"/></svg>    
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 248H128V192H48V248zM48 296V360H128V296H48zM176 296V360H272V296H176zM320 296V360H400V296H320zM400 192H320V248H400V192zM400 408H320V464H384C392.8 464 400 456.8 400 448V408zM272 408H176V464H272V408zM128 408H48V448C48 456.8 55.16 464 64 464H128V408zM272 192H176V248H272V192z"/></svg>    
                 </button>
 
                 <!-- Task Repeats -->
@@ -137,25 +147,35 @@
                         <x-forms.label for="task_repeats">{{ __('Task Repeats') }}</x-forms.label>
                     </x-forms.form-group>
                 </div>
-
+                
                 <!-- Start Date -->
                 <div class="mb-3" x-show="showDates" x-transition.duration.300ms>
                     <x-forms.form-group>
-                        <x-forms.input id="date_start" name="date_start" type="date" wire:model="currentTask.date_start" />
+                        <x-forms.input 
+                            id="date_start" 
+                            name="date_start" 
+                            type="date" 
+                            max="{{ isset($currentTask['date_due']) ? $currentTask['date_due'] : '' }}"
+                            wire:model.lazy="currentTask.date_start" />
                         <x-forms.label for="date_start">{{ __('Start Date') }}</x-forms.label>
                     </x-forms.form-group>
-                    @error ('currentTask.dateStart')
+                    @error ('currentTask.date_start')
                         <p id="date_start_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-
+                
                 <!-- Due Date -->
                 <div class="mb-3" x-show="showDates" x-transition.duration.300ms>
                     <x-forms.form-group>
-                        <x-forms.input id="date_due" name="date_due" type="date" wire:model="currentTask.date_due" />
+                        <x-forms.input 
+                            id="date_due" 
+                            name="date_due" 
+                            type="date" 
+                            min="{{ isset($currentTask['date_start']) ? $currentTask['date_start'] : '' }}"
+                            wire:model.lazy="currentTask.date_due" />
                         <x-forms.label for="date_due">{{ __('Due Date') }}</x-forms.label>
                     </x-forms.form-group>
-                    @error ('currentTask.dateDue') 
+                    @error ('currentTask.date_due') 
                         <p id="date_due_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -165,7 +185,7 @@
             <!-- Task Name -->
             <div class="col-span-2 md:col-span-6">
                 <x-forms.form-group>
-                    <x-forms.input type="text" id="name" name="name" wire:model="currentTask.name" />
+                    <x-forms.input type="text" id="name" name="name" wire:model.lazy="currentTask.name" />
                     <x-forms.label for="name">{{ __('Task Name') }}</x-forms.label>
                 </x-forms.form-group>
                 @error ('currentTask.name')
@@ -179,19 +199,26 @@
     
     <x-slot name="content">
 
-        <div 
-            class="grid grid-cols-2 gap-x-3 gap-y-8 lg:h-full"
-            wire:loading.class="opacity-50"
-            wire:target="save, resetFormFields"
-        >
+        <div class="grid grid-cols-2 gap-x-3 gap-y-8 lg:h-full">
 
             <section class="mb-3 mt-3 pr-2 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden" tabindex="0">
                 <h2 class="mb-3">{{ __('Details') }}</h2>
                 <x-forms.form-group>
                     <div x-data="{ currentTask: @entangle('currentTask').defer }">
-                        <input id="details" name="details" type="hidden" x-model="currentTask.details" />
+                        <input 
+                            id="details" 
+                            name="details" 
+                            type="hidden" 
+                            x-model="currentTask.details" 
+                        />
                         <div wire:ignore>
-                        <trix-editor tabindex="0" class="trix-editor trix-content text-xs" x-model.debounce.300ms="currentTask.details" title="Task Details"></trix-editor>
+                            <trix-editor 
+                                tabindex="0" 
+                                class="trix-editor trix-content text-xs" 
+                                x-model.debounce.300ms="currentTask.details" 
+                                wire:model.debounce.5s="currentTask.details" 
+                                title="Task Details">
+                            </trix-editor>
                         </div>
                         @error ('currentTask.details') 
                             <p id="details_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
@@ -200,7 +227,7 @@
                 </x-forms.form-group>
             </section>
 
-            <section class="mb-3 mt-3 -ml-2 mr-0 p-2 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden bg-gray-100" tabindex="0">
+            <section class="-ml-6 -mr-4 lg:-mt-2 lg:mb-3 lg:-ml-2 lg:mr-0 p-2 pl-6 lg:pl-4 lg:pt-4 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden bg-gray-100" tabindex="0">
                 <h2 class="mb-3 grow">{{ __('Subtasks') }}</h2>
 
                 @isset($currentTask['children'])
@@ -213,6 +240,8 @@
                         <x-laravel-blade-sortable::sortable-item 
                             sort-key="{{ $value['id'] }}" 
                             wire:key="subtask-{{ $value['id'] }}"
+                            wire:loading.class="opacity-25"
+                            wire:target="showTask({{ $value['id'] }})"
                             class="col-span-12 flex gap-x-3 items-center hover:bg-gray-100 p-2"
                         >
                             <div class="drag-handle">
@@ -221,7 +250,9 @@
                             <button 
                                 wire:click.prevent="updateTaskStatusClosed({{ $value['id'] }})"
                                 wire:key="updateSubtaskButton-{{ $value['id'] }}"
-                                class="grow-0 flex justify-items-center items-center h-4 w-4 border-2 border-gray-300 rounded bg-white {{ $value['task_status_id'] == $taskStatusClosed ? 'fill-green-600' : 'fill-white' }} hover:border-green-300 hover:fill-green-600" 
+                                wire:loading.class="opacity-25"
+                                wire:target="updateTaskStatusClosed({{ $value['id'] }})"
+                                class="grow-0 flex justify-items-center items-center h-4 w-4 border-2 border-gray-300 rounded bg-white {{ $value['closed_at'] != null ? 'fill-green-600' : 'fill-white' }} hover:border-green-300 hover:fill-green-600" 
                                 aria-label="Mark task closed"
                             >
                                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
@@ -230,15 +261,15 @@
                                 <x-forms.input 
                                     type="text" 
                                     id="currentSubtask.{{ $key }}.name" 
-                                    class="{{ $value['task_status_id'] == $taskStatusClosed ? 'line-through' : '' }}"
+                                    class="{{ $value['closed_at'] != null ? 'line-through' : '' }}"
                                     wire:model.lazy="currentTask.children.{{ $key }}.name"
                                     disabled
                                 />
                                 <x-forms.label for="currentSubtask.{{ $key }}.name" class="hidden">{{ __('Subtask Name') }}</x-forms.label>
                             </x-forms.form-group>
                             <button 
-                                wire:click.prevent="edit({{ $value['id'] }})" 
-                                class="flex justify-items-center items-center h-4 w-4 fill-gray-300 hover:fill-green-600"
+                                wire:click.prevent="showTask({{ $value['id'] }})" 
+                                class="flex justify-items-center items-center h-4 w-4 fill-gray-300 hover:fill-green-600 active:fill-slate-900"
                                 aria-label="Edit Subtask Details"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.8 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"/></svg>
@@ -255,12 +286,12 @@
                     <x-forms.form-group class="grow">
                         <x-forms.input 
                             type="text" 
-                            id="subtasknew.name" 
-                            name="subtasknew.name" 
-                            wire:model.lazy="subtasknew.name"
+                            id="currentTask.subtasknew.name" 
+                            name="currentTask.subtasknew.name" 
+                            wire:model.lazy="currentTask.subtasknew.name"
                             wire:keydown.enter="saveSubtask({{ isset($currentTask['id']) ? $currentTask['id'] : '' }})"
                         />
-                        <x-forms.label for="subtasknew.name">{{ __('New Subtask') }}</x-forms.label>
+                        <x-forms.label for="currentTask.subtasknew.name">{{ __('New Subtask') }}</x-forms.label>
                     </x-forms.form-group>
                     <button 
                         wire:click.prevent="saveSubtask({{ isset($currentTask['id']) ? $currentTask['id'] : '' }})" 
@@ -268,7 +299,7 @@
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
                     </button>
-                    @error ('subtask.{{ $value }}.name')
+                    @error ('currentTask.subtasknew.{{ $value }}.name')
                         <p id="name_error_help" class="mt-2 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -302,4 +333,4 @@
         </div>
     </x-slot>
 
-</x-jet-dialog-modal>
+</x-dialog-modal>

@@ -9,10 +9,18 @@ class Task extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'closed_at' => 'date',
+    ];
+
     protected $fillable = ['name', 'details'];
 
     public function children() {
         return $this->hasMany(Task::class, 'parent_id')->orderBy('sort_order');
+    }
+
+    public function isClosed() {
+        return $this->closed_at !== null;
     }
 
     public function lists() {
