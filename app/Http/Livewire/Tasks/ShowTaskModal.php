@@ -65,6 +65,38 @@ class ShowTaskModal extends Component
         ]);
     }
 
+    public function handleSortOrderChange($sortOrder)
+    {
+        $currentSubtasks = collect($this->currentTask['children']);
+
+        // Reorder the subtasks on the current model binding
+        $this->currentTask['children'] = collect($sortOrder)
+            ->map(function ($id) use ($currentSubtasks) {
+                return $currentSubtasks->firstWhere('id', $id);
+            })
+            ->toArray();
+
+        // Get all subtasks for current task from database
+        $subtasks = Task::select('id', 'sort_order')
+            ->where('parent_id', $this->currentTask['id'])
+            ->get();
+
+        // Make an array where key is the subtask id and value is the sort order
+        $sortOrder = array_flip($sortOrder);
+
+        // Update the sortorder on the database
+        foreach ($subtasks as $subtask) {
+            $subtask->sort_order = $sortOrder[$subtask->id];
+            $subtask->update();
+        };
+
+        // Send alert message
+        $this->dispatchBrowserEvent('alert',[
+            'type'=>'success',
+            'message'=> "Subtasks Reordered"
+        ]);  
+    }
+
     public function modalClosed()
     {
         $this->reset('currentTask', 'currentTaskId');
@@ -103,6 +135,42 @@ class ShowTaskModal extends Component
     public function render()
     {
         return view('livewire.tasks.show-task-modal');
+    }
+
+    public function saveSubtask($parentId = null)
+    {
+
+        // Create new task on model
+        $subtask = New Task;
+        
+        // Determine which fields were entered and set the appropriate values on the subtask
+        foreach ($this->currentTask['subtasknew'] as $key => $value) {
+            switch ($key):
+                case 'name':
+                    $subtask->name = $value;
+                    break;
+            endswitch;
+        }
+
+        // Set Sort Order
+        $subtask->sort_order = count($this->currentTask['children']);
+
+        // Set relationships
+        $subtask->parent()->associate($parentId);
+
+        // Save subtask
+        $subtask->save();
+
+        // Reload the subtasks including the newly added one
+        $this->currentTask['children'] = $subtask->parent->children;
+
+        unset($this->currentTask['subtasknew']);
+
+        // Send alert message
+        $this->dispatchBrowserEvent('alert',[
+            'type'=>'success',
+            'message'=> "Added subtask: " . $subtask->name
+        ]);   
     }
 
     public function showTask($id)
