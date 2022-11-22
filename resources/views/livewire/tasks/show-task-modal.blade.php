@@ -236,7 +236,7 @@
                 </x-forms.form-group>
             </section>
 
-            <section class="-ml-6 -mr-4 lg:-mt-2 lg:mb-3 lg:-ml-2 lg:mr-0 p-2 pl-6 lg:pl-4 lg:pt-4 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden bg-gray-100" tabindex="0">
+            <section class="-mx-6 lg:-mt-2 lg:mb-3 lg:-ml-2 lg:-mr-6 p-2 pl-6 lg:pl-4 lg:pt-4 col-span-2 lg:col-span-1 lg:overflow-y-auto overflow-x-hidden bg-gray-100" tabindex="0">
                 <h2 class="mb-3 grow">{{ __('Subtasks') }}</h2>
 
                 @isset($currentTask['children'])

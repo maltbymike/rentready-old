@@ -15,15 +15,35 @@ class TaskListForm extends Component
      *
      * @var array
      */
-    public $state = [];
+    public $state = [
+        'showListForm' => false,
+    ];
+
+    /**
+     * The current task list.
+     *
+     * @var integer
+     */
+    public $listId;
 
     /**
      * Set event listeners to respond to.
      * 
      * @var array
      */
-    protected $listeners = ['loadTaskList'];
+    protected $listeners = [
+        'loadTaskList',
+        'modal-closed' => 'modalClosed',
+    ];
 
+    /**
+     * The url query parameters
+     * 
+     * @var array
+     */
+    protected $queryString = [
+        'listId' => ['except' => '', 'as' => 'l'],
+    ];
 
     /**
      * Clear form data
@@ -31,6 +51,14 @@ class TaskListForm extends Component
     public function clear()
     {
         $this->reset();
+    }
+
+    public function mount(Request $request)
+    {
+        // If a task has been set in the url load it
+        if (request('l') !== null) {
+            $this->loadTaskList(request('l'));
+        }
     }
 
     /**
@@ -75,11 +103,25 @@ class TaskListForm extends Component
     /**
      * Load tasklist by id
      */
-    public function loadTaskList(TaskList $taskList)
+    public function loadTaskList($id)
     {
+        $taskList = TaskList::with('statuses')->find($id);
+
         $this->reset();
 
         $this->state = $taskList->toArray();
+        $this->state['showListForm'] = true;
+        $this->listId = $taskList->id;
+    }
+
+    /**
+     * Reset state when modal is closed
+     * 
+     * @return void
+     */
+    public function modalClosed()
+    {
+        $this->reset('state', 'listId');
     }
 
     /**

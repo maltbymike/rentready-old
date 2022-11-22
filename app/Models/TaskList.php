@@ -11,6 +11,10 @@ class TaskList extends Model
 
     protected $fillable = ['name', 'open', 'closed'];
 
+    public function statuses() {
+        return $this->belongsToMany(TaskStatus::class)->withPivot('color');
+    }
+
     public function tasks() {
         return $this->belongsToMany(Task::class, 'task_lists_tasks', 'task_list_id', 'task_id');
     }

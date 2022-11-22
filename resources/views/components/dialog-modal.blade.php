@@ -12,7 +12,7 @@
             {{ $title }}
         </div>
 
-        <div class="-mr-6 px-6 py-2 flex-1 overflow-y-auto {{ $contentClass }}">
+        <div class="px-6 py-2 flex-1 overflow-y-auto {{ $contentClass }}">
             {{ $content }}
         </div>
 
