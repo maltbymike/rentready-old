@@ -32,6 +32,7 @@
 
     </div>
 
-    <div class="grow-0">{{ $end }}</div>
-        
+    @isset($end)
+        <div class="grow-0">{{ $end }}</div>
+    @endisset    
 </div>

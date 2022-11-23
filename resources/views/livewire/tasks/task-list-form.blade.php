@@ -20,21 +20,7 @@
                 </x-forms.form-group>
             </div>
 
-            <div class="mb-3 col-span-2">
-                <x-forms.form-group>
-                    <x-forms.input id="open" type="number" class="mt-1 block w-full" wire:model.defer="state.open" />
-                    <x-forms.label for="open" value="{{ __('Open Status') }}" />
-                    <x-forms.input-error for="open" class="mt-2" />
-                </x-forms.form-group>
-            </div>
-
-            <div class="mb-3 col-span-2">
-                <x-forms.form-group>
-                    <x-forms.input id="closed" type="number" class="mt-1 block w-full" wire:model.defer="state.closed" />
-                    <x-forms.label for="closed" value="{{ __('Closed Status') }}" />
-                    <x-forms.input-error for="closed" class="mt-2" />
-                </x-forms.form-group>
-            </div>
+            <x-tasks.assign-statuses-to-task-lists class="mb-3 col-span-3" />
         
         </div>
     
