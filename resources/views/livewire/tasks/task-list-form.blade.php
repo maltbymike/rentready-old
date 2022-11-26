@@ -54,9 +54,11 @@
             </x-slot>
 
             <x-slot name="content">
-                <x-tasks.assign-statuses-to-task-lists
-                    :statuses="$state['statuses']"
-                    class="mb-3 col-span-6" />
+                <div class="col-span-full max-h-[50vh] overflow-y-auto">
+                    <x-tasks.assign-statuses-to-task-lists
+                        :statuses="$state['statuses']"
+                        class="mb-3 col-span-6" />
+                </div>
             </x-slot>    
     
         </x-page-section>

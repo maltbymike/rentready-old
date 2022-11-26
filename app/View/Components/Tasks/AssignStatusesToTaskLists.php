@@ -22,7 +22,13 @@ class AssignStatusesToTaskLists extends Component
     public function __construct($statuses)
     {
         $this->statuses = TaskStatus::all();
-        $this->currentListStatuses = $statuses;
+
+        // Create array of currently assigned statuses
+        foreach ($statuses as $status) {
+            $statusArray[] = $status['id'];
+        }
+        
+        $this->currentListStatuses = $statusArray;
     }
 
     /**

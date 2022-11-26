@@ -75,25 +75,39 @@ class TaskListForm extends Component
         $validated = Validator::make($this->state, [
             'id' => 'sometimes|integer',
             'name' => 'required|string|max:100',
-            'open' => 'required|integer',
-            'closed' => 'required|integer',
-        ])->validateWithBag('createTaskList');
+            'add_status' => 'required',
+            'add_status.*' => 'integer',
+            'default_status' => 'required|integer',
+            'closed_status' => 'required|integer',
+        ],
+        [   
+            'add_status.required' => __('At least one active status is required'),
+            'add_status.*.integer' => __('Use checkbox to set active status'),
+        ])
+        ->validateWithBag('createTaskList');
             
         // If id is set find and update tasklist otherwise create a new tasklist
         if (isset($validated['id'])) {
+
             $taskList = TaskList::find($validated['id']);
+
         } else {
+
             $taskList = new TaskList;
+
+            // Assign tasklist to current team
+            $taskList->team()->associate($request->user()->currentTeam->id);
+
         }
 
         // Assign submitted values to tasklist
         $taskList->name = $validated['name'];
-        $taskList->open = $validated['open'];
-        $taskList->closed = $validated['closed'];
+        $taskList->open = $validated['default_status'];
+        $taskList->closed = $validated['closed_status'];
 
-        // Assign tasklist to current team
-        $taskList->team()->associate($request->user()->currentTeam->id);
-        
+        // Assign statuses to tasklist
+        $taskList->statuses()->sync($validated['add_status']);
+
         // Save to database
         $taskList->save();
 
@@ -111,7 +125,21 @@ class TaskListForm extends Component
         $this->reset();
 
         $this->state = $taskList->toArray();
+        
         $this->state['showListForm'] = true;
+
+        // Create array of currently assigned statuses
+        foreach ($taskList->statuses as $status) {
+            $statusArray[$status->id] = $status->id;
+        }
+
+        // Mark currently assigned statuses to state
+        $this->state['add_status'] = $statusArray;
+
+        // Set open and closed values
+        $this->state['default_status'] = $taskList->open;
+        $this->state['closed_status'] = $taskList->closed;
+
         $this->listId = $taskList->id;
     }
 
