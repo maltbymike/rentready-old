@@ -17,6 +17,7 @@ class TaskListForm extends Component
      */
     public $state = [
         'showListForm' => false,
+        'statuses' => false,
     ];
 
     /**
@@ -77,7 +78,7 @@ class TaskListForm extends Component
             'open' => 'required|integer',
             'closed' => 'required|integer',
         ])->validateWithBag('createTaskList');
-        
+            
         // If id is set find and update tasklist otherwise create a new tasklist
         if (isset($validated['id'])) {
             $taskList = TaskList::find($validated['id']);

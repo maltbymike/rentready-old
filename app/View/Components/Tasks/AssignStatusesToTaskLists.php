@@ -9,18 +9,20 @@ use Illuminate\View\Component;
 class AssignStatusesToTaskLists extends Component
 {
     /**
-     * Store task statuses
+     * Store task statuses from database and active statuses or current list
      */
     public $statuses;
+    public $currentListStatuses;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($statuses)
     {
         $this->statuses = TaskStatus::all();
+        $this->currentListStatuses = $statuses;
     }
 
     /**
