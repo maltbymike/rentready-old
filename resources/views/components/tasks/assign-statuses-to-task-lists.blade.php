@@ -3,12 +3,16 @@
     <thead>
         <tr class="bg-lightblue text-white">
             <th class='text-left p-1 w-1/2'>{{ __('Active Statuses') }}</th>
-            <th class='text-center w-1/4'>{{ __('Default') }}</th>
-            <th class='text-center w-1/4'>{{ __('Closed') }}</th>
+            <th class='text-center w-1/6'>{{ __('Colour') }}</th>
+            <th class='text-center w-1/6'>{{ __('Default') }}</th>
+            <th class='text-center w-1/6'>{{ __('Closed') }}</th>
         </tr>
         <tr>
             <td>
                 <x-forms.input-error for="add_status" class="px-1 text-left" />
+            </td>
+            <td>
+                <!-- Intentionally Blank -->
             </td>
             <td>
                 <x-forms.input-error for="default_status" class="px-2" />
@@ -27,6 +31,7 @@
                         hover:fill-primary hover:drop-shadow-lg hover:border"
             >
                 <th class='p-1 text-left flex flex-wrap gap-2'>
+                    
                     <input type="checkbox" 
                         id="status-{{ $status->id }}" 
                         name="add_status[{{ $status->id }}]"
@@ -35,8 +40,19 @@
                         class="m-auto grow-0 rounded"
                     />
                     <label for="status-{{ $status->id }}" class="grow">{{ $status->name }}</label>
+                    
                     <x-forms.input-error for="add_status.{{ $status->id }}" class="px-2 w-full" />
                 </th>
+
+                <td>
+                    <input type="color" 
+                        id="color-{{ $status->id }}"
+                        name="color-{{ $status->id }}"
+                        wire:model="state.color.{{ $status->id }}"
+                        class="h-7 w-6" 
+                    />
+                    <x-forms.input-error for="add_status.{{ $status->id }}" class="px-2 w-full" />          
+                </td>
 
                 <td>
                     <input type="radio" 

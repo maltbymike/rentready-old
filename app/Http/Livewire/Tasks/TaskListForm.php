@@ -70,19 +70,21 @@ class TaskListForm extends Component
     public function saveTaskList(Request $request)
     {   
         $this->resetErrorBag();
-    
+
         // Validate
         $validated = Validator::make($this->state, [
             'id' => 'sometimes|integer',
             'name' => 'required|string|max:100',
             'add_status' => 'required',
             'add_status.*' => 'integer',
+            'color.*' => ['regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i','nullable'],
             'default_status' => 'required|integer',
             'closed_status' => 'required|integer',
         ],
         [   
             'add_status.required' => __('At least one active status is required'),
             'add_status.*.integer' => __('Use checkbox to set active status'),
+            'color.*.regex' => __('Select a valid colour'),
         ])
         ->validateWithBag('createTaskList');
             
@@ -106,7 +108,17 @@ class TaskListForm extends Component
         $taskList->closed = $validated['closed_status'];
 
         // Assign statuses to tasklist
-        $taskList->statuses()->sync($validated['add_status']);
+        foreach ($validated['add_status'] as $status) {
+            // Determine if color is set to white, if it is store null in the database
+            $validatedColor = $validated['color'][$status];
+            $defaultColorArray = ['#ffffff', '#FFFFFF', '#fff', '#FFF'];
+            $syncColor = in_array($validatedColor, $defaultColorArray) ? null : $validatedColor;
+
+            // add color to status array that will be synced with task list
+            $syncStatuses[$status] = ['color' => $syncColor];
+        }
+        // sync statuses with task list
+        $taskList->statuses()->sync($syncStatuses);
 
         // Save to database
         $taskList->save();
@@ -131,10 +143,12 @@ class TaskListForm extends Component
         // Create array of currently assigned statuses
         foreach ($taskList->statuses as $status) {
             $statusArray[$status->id] = $status->id;
+            $colorArray[$status->id] = $status->pivot->color ? $status->pivot->color : '#ffffff';
         }
 
         // Mark currently assigned statuses to state
         $this->state['add_status'] = $statusArray;
+        $this->state['color'] = $colorArray;
 
         // Set open and closed values
         $this->state['default_status'] = $taskList->open;
