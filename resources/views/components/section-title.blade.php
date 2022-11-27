@@ -1,4 +1,4 @@
-<div class="pt-5 md:py-5 md:col-span-1 flex justify-between">
+<div class="px-3 md:pt-5 md:mt-5 md:col-span-1 flex justify-between">
     <div class="">
         <h3 class="text-lg font-medium text-gray-900">{{ $title }}</h3>
 

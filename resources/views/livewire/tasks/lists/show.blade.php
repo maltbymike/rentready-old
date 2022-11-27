@@ -46,7 +46,7 @@
 
                         <div class="flex items-center">
     
-                            <div class="border-2 rounded p-0.5 text-xs" style="border-color: {{ $task['statusColor'] }}">{{ $task['statusName'] }}</div>
+                            <div class="border-2 rounded px-1 py-0.5 text-xs" style="border-color: {{ $task['statusColor'] }}">{{ $task['statusName'] }}</div>
 
                             <button 
                                 wire:click="$emit('loadTaskList', '{{ $task['id'] }}')"

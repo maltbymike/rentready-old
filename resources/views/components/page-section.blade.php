@@ -11,7 +11,7 @@
     </x-section-title>
 
     <div class="md:mt-5 md:col-span-2">
-        <div class="bg-white p-3 sm:p-6 shadow {{ isset($footer) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
+        <div class="bg-white md:p-6 shadow {{ isset($footer) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
             <div class="grid grid-cols-6 gap-6">
                 {{ $content }}
             </div>
