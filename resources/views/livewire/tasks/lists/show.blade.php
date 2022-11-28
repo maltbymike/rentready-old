@@ -44,10 +44,12 @@
 
                     <x-slot name="end">
 
-                        <div class="flex items-center">
-    
-                            <div class="border-2 rounded px-1 py-0.5 text-xs" style="border-color: {{ $task['statusColor'] }}">{{ $task['statusName'] }}</div>
-
+                        <div class="flex items-center gap-3">
+                            <x-tasks.status-select-dropdown 
+                                :current="$task['task_status_id']"
+                                :statuses="$list->statuses" 
+                            />
+                        
                             <button 
                                 wire:click="$emit('loadTaskList', '{{ $task['id'] }}')"
                                 class="h-4 w-4 m-2 hover:fill-primary active:fill-gray-900" 

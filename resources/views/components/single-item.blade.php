@@ -4,7 +4,7 @@
             group
             hover:border
             hover:bg-gray-50 
-            hover:drop-shadow-lg">
+            hover:shadow-lg">
     
     <div class="grow flex items-center">
 
