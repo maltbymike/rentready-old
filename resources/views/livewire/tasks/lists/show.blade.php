@@ -7,7 +7,7 @@
 
         <div class="col-span-full rounded flex flex-col">
         
-            @foreach ($list->tasks as $task)
+            @foreach ($list->tasks as $key => $task)
 
                 <x-single-item 
                     wire:key="task-{{ $task['id'] }}"
@@ -45,7 +45,9 @@
                     <x-slot name="end">
 
                         <div class="flex items-center gap-3">
-                            <x-tasks.status-select-dropdown 
+                            <x-tasks.status-select-dropdown
+                                wire:change="changeTaskStatus({{ $task }}, $event.target.value)"
+                                wire:model="list.tasks.{{ $key }}.task_status_id"
                                 :current="$task['task_status_id']"
                                 :statuses="$list->statuses" 
                             />
