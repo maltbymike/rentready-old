@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskListController;
-use App\Http\Livewire\Tasks;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +29,6 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/tasks', Tasks::class)->name('tasks');
     Route::get('/tasks/lists', [TaskListController::class, 'index'])->name('tasks.lists');
     Route::get('/tasks/list/{list}', [TaskListController::class, 'show'])->name('tasks.list');
 

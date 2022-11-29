@@ -38,26 +38,13 @@
                                         {{ __('Tasks') }}
                                     </div>
 
-                                    <!-- Tasks -->
-                                    <x-jet-dropdown-link href="{{ route('tasks') }}">
-                                        {{ __('Show Tasks') }}
-                                    </x-jet-dropdown-link>
-
                                     <!-- Task Lists -->
                                     <x-jet-dropdown-link href="{{ route('tasks.lists') }}">
-                                        {{ __('Create Task Lists') }}
+                                        {{ __('Task Lists') }}
                                     </x-jet-dropdown-link>
 
                                     <div class="border-t border-gray-100"></div>
 
-                                    <!-- Team Switcher -->
-                                    <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ __('Switch Teams') }}
-                                    </div>
-
-                                    @foreach (Auth::user()->allTeams() as $team)
-                                        <x-jet-switchable-team :team="$team" />
-                                    @endforeach
                                 </div>
                             </x-slot>
                         </x-jet-dropdown>
