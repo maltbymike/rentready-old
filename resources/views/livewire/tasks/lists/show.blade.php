@@ -11,9 +11,20 @@
 
                 <x-single-item 
                     wire:key="task-{{ $task['id'] }}"
+                    wire:poll=''
                     wire:click.prevent="$emit('showTask', {{ $task['id'] }})"
+                    disabled="{{$task->isClosed()}}"
                 >
-                    {{ $task['name'] }}
+                    <x-slot name="start">
+                        <input type="checkbox" 
+                            wire:click="closeOrOpenTask({{ $task }})"
+                            class="m-2 border-primary text-primary focus:ring-primary rounded-lg"
+                            {{ $task->isClosed() ? 'checked' : '' }}
+                            title="Close Task"
+                            />
+                    </x-slot>
+
+                    {{ $task->name }} 
 
                     <div 
                         class="flex

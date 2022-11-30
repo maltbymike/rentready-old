@@ -1,10 +1,19 @@
+@props([
+    'disabled' => false,    
+])
+
 <div class="flex
             items-center 
             border-y 
             group
             hover:border
             hover:bg-gray-50 
-            hover:shadow-lg">
+            hover:shadow-lg
+            {{ $disabled ? 'opacity-25' : '' }}">
+
+    @isset($start)
+        <div class="grow-0">{{ $start }}</div>
+    @endisset
     
     <div class="grow flex items-center">
 
@@ -34,5 +43,5 @@
 
     @isset($end)
         <div class="grow-0">{{ $end }}</div>
-    @endisset    
+    @endisset
 </div>

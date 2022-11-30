@@ -19,6 +19,15 @@ class Task extends Model
         return $this->hasMany(Task::class, 'parent_id')->orderBy('sort_order');
     }
 
+    public function closeOrOpen() {
+        return $this->closed_at = $this->isClosed() ? null : now();
+    }
+
+    public function closedOrStatus() {
+        $status = $this->isClosed() ? 5 : $this->task_status_id;
+        return TaskStatus::find($status);
+    }
+
     public function isClosed() {
         return $this->closed_at !== null;
     }

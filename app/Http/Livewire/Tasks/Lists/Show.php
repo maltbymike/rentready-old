@@ -12,7 +12,7 @@ class Show extends Component
     public $list = [];
 
     protected $rules = [
-        'list.tasks.*.task_status_id' => 'integer'
+        'list.tasks.*.task_status_id' => 'integer',
     ];
 
     public function render()
@@ -28,7 +28,24 @@ class Show extends Component
         // Update user that task has been changed
         $this->dispatchBrowserEvent('alert',[
             'type' => 'success',
-            'message' => 'Status Updated',
+            'message' => __('Status Updated'),
+        ]);
+    }
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    public function closeOrOpenTask(Task $task)
+    {
+        $task->closeOrOpen();
+        $task->save();
+
+        // Update user that task has been changed
+        $this->dispatchBrowserEvent('alert',[
+            'type' => 'success',
+            'message' => $task->isClosed() ? __('Closed Task') : __('Reopened Task'),
         ]);
     }
 }
