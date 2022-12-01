@@ -18,7 +18,7 @@
 
                     <!-- Task Links -->
                     <div class="relative inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition">
-                        <x-jet-dropdown align="left" width="60">
+                        <x-jet-dropdown align="left" width="w-max">
                             <x-slot name="trigger">
                                 <span class="inline-flex rounded-md">
                                     <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
@@ -32,22 +32,23 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                <div class="w-60">
-                                    <!-- Task Heading -->
-                                    <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ __('Tasks') }}
-                                    </div>
 
-                                    <!-- Task Lists -->
-                                    <x-jet-dropdown-link href="{{ route('tasks.lists') }}">
-                                        {{ __('Task Lists') }}
-                                    </x-jet-dropdown-link>
-
-                                    <div class="border-t border-gray-100"></div>
-
+                                <!-- Task Heading -->
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('Tasks') }}
                                 </div>
+
+                                <!-- Task Lists -->
+                                <x-jet-dropdown-link href="{{ route('tasks.lists') }}">
+                                    {{ __('Task Lists') }}
+                                </x-jet-dropdown-link>
+
+                                <div class="border-t border-gray-100"></div>
+
                             </x-slot>
+
                         </x-jet-dropdown>
+
                     </div>
 
                 </div>

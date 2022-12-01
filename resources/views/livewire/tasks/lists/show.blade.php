@@ -19,7 +19,7 @@
 
                         <input type="checkbox" 
                             wire:click="closeOrOpenTask({{ $task }})"
-                            class="m-2 border-primary text-primary focus:ring-primary rounded-lg"
+                            class="m-2 text-primary focus:ring-primary rounded-lg"
                             {{ $task->isClosed() ? 'checked' : '' }}
                             title="Close Task" />
                     
