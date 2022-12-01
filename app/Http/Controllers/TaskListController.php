@@ -44,16 +44,24 @@ class TaskListController extends Controller
      */
     public function show(TaskList $list)
     {
+        
         $list->load('tasks', 'statuses');
 
         foreach ($list->tasks as $task) {
-            $currentTaskStatus = $list->statuses->find($task->task_status_id);
-            $task->statusName = $currentTaskStatus->name;
-            $task->statusColor = $currentTaskStatus->pivot->color;
+
+            if ( $currentTaskStatus = $list->statuses->find($task->task_status_id) ) {
+            
+                $task->statusName = $currentTaskStatus->name;
+                $task->statusColor = $currentTaskStatus->pivot->color;    
+            
+            }
+        
         }
 
         return view('tasks.lists.show', [
             'list' => $list,
         ]);
+
     }
+    
 }
