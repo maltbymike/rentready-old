@@ -60,11 +60,7 @@
                             class="grow py-1 px-3 rounded-l-lg border-r-0 border-gray-200 focus:border-none focus:ring-0 focus:ring-offset-0 w-3/4" 
                             placeholder="New Status" />
 
-                            <input type="color" 
-                                name="newStatusColor"
-                                wire:model="list.newStatusColor"
-                                class="h-6 w-6 p-0 bg-transparent"
-                                 />
+                            <x-forms.input-color name="newStatusColor" wire:model="list.newStatusColor" />
 
                         <button type="submit"
                             class="group grow-0 active:scale-125 disabled:scale-100"

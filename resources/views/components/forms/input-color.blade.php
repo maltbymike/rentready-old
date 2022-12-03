@@ -1,0 +1,1 @@
+<input type="color" {{ $attributes->merge(['class' => 'h-7 w-6 p-0 bg-transparent']) }}>

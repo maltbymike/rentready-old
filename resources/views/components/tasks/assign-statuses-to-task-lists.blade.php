@@ -45,12 +45,7 @@
                 </th>
 
                 <td>
-                    <input type="color" 
-                        id="color-{{ $status->id }}"
-                        name="color-{{ $status->id }}"
-                        wire:model="state.color.{{ $status->id }}"
-                        class="h-7 w-6" 
-                    />
+                    <x-forms.input-color id="color-{{ $status->id }}" name="color-{{ $status->id }}" wire:model="state.color.{{ $status->id }}" />
                     <x-forms.input-error for="add_status.{{ $status->id }}" class="px-2 w-full" />          
                 </td>
 
