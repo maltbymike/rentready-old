@@ -12,23 +12,15 @@ class AssignStatusesToTaskLists extends Component
      * Store task statuses from database and active statuses or current list
      */
     public $statuses;
-    public $currentListStatuses;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($statuses)
+    public function __construct()
     {
-        $this->statuses = TaskStatus::all();
-
-        // Create array of currently assigned statuses
-        foreach ($statuses as $status) {
-            $statusArray[] = $status['id'];
-        }
-        
-        $this->currentListStatuses = $statusArray;
+        $this->statuses = TaskStatus::all();        
     }
 
     /**

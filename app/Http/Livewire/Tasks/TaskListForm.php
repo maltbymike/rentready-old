@@ -77,7 +77,7 @@ class TaskListForm extends Component
             'name' => 'required|string|max:100',
             'add_status' => 'required',
             'add_status.*' => 'integer',
-            'color.*' => ['regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i','nullable'],
+            'color.*' => ['sometimes','regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
             'default_status' => 'required|integer',
             'closed_status' => 'required|integer',
         ],
@@ -141,6 +141,8 @@ class TaskListForm extends Component
         $this->state['showListForm'] = true;
 
         // Create array of currently assigned statuses
+        $statusArray = [];
+        $colorArray = [];
         foreach ($taskList->statuses as $status) {
             $statusArray[$status->id] = $status->id;
             $colorArray[$status->id] = $status->pivot->color ? $status->pivot->color : '#ffffff';

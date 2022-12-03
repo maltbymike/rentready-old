@@ -13,8 +13,6 @@ class Show extends Component
 
     protected $rules = [
         'list.tasks.*.task_status_id' => 'integer',
-        'list.newStatusName' => 'string',
-        'list.newStatusColor' => 'string',
     ];
 
     public function render()
