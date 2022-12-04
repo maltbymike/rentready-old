@@ -19,8 +19,24 @@ class Task extends Model
         return $this->hasMany(Task::class, 'parent_id')->orderBy('sort_order');
     }
 
+    /**
+     * @return int // task_status_id of task list's closed or open value
+     */
     public function closeOrOpen() {
-        return $this->closed_at = $this->isClosed() ? null : now();
+
+        // Toggle closed_at
+        $this->closed_at = $this->isClosed() ? null : now();
+
+        // Find first task list assigned to this task
+        $list = $this->lists->first();
+
+        // Get open or closed status from task list
+        $closeOrOpenStatus = $this->closed_at != null ? $list->closed : $list->open;
+
+        // Associated task with status
+        $this->status()->associate($closeOrOpenStatus);
+        
+        return $closeOrOpenStatus;
     }
 
     public function closedOrStatus() {

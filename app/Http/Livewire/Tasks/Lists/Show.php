@@ -43,17 +43,8 @@ class Show extends Component
 
     public function closeOrOpenTask(Task $task)
     {
-        // Determine if task should be opened or closed and set closed_at accordingly
-        $task->closeOrOpen();
-        
-        // Find first task list assigned to this task
-        $list = $task->lists->first();
-
-        // Get open or closed status from task list
-        $closeOrOpenStatus = $task->closed_at != null ? $list->closed : $list->open;
-
-        // Associated task with status
-        $task->status()->associate($closeOrOpenStatus);
+        // Associate open or closed status to task
+        $closeOrOpenStatus = $task->closeOrOpen();
         
         // Set status in state so that view will be updated
         $this->list->tasks->find($task->id)->task_status_id = $closeOrOpenStatus;
