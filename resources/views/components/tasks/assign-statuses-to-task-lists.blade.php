@@ -1,3 +1,6 @@
+@props([
+    'statuses',
+])
 <table {{ $attributes->merge(['class' => 'table-fixed text-center w-full']) }}>
 
     <thead>
@@ -46,7 +49,7 @@
 
                 <td>
                     <x-forms.input-color id="color-{{ $status->id }}" name="color-{{ $status->id }}" wire:model="state.color.{{ $status->id }}" />
-                    <x-forms.input-error for="add_status.{{ $status->id }}" class="px-2 w-full" />          
+                    <x-forms.input-error for="color.{{ $status->id }}" class="px-2 w-full" />          
                 </td>
 
                 <td>

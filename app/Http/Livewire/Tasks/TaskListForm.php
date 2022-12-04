@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 use App\Models\TaskList;
+use App\Models\TaskStatus;
 
 class TaskListForm extends Component
 {
@@ -76,7 +77,7 @@ class TaskListForm extends Component
             'id' => 'sometimes|integer',
             'name' => 'required|string|max:100',
             'add_status' => 'required',
-            'add_status.*' => 'integer',
+            'add_status.*' => 'false_or_integer',
             'color.*' => ['sometimes','regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
             'default_status' => 'required|integer',
             'closed_status' => 'required|integer',
@@ -109,6 +110,10 @@ class TaskListForm extends Component
 
         // Assign statuses to tasklist
         foreach ($validated['add_status'] as $status) {
+            
+            // if status is been unchecked skip it
+            if ($status == false) continue;
+
             // Determine if color is set to white, if it is store null in the database
             $validatedColor = $validated['color'][$status];
             $defaultColorArray = ['#ffffff', '#FFFFFF', '#fff', '#FFF'];
@@ -133,6 +138,7 @@ class TaskListForm extends Component
     public function loadTaskList($id)
     {
         $taskList = TaskList::with('statuses')->find($id);
+        $statuses = TaskStatus::all();
 
         $this->reset();
 
@@ -143,9 +149,10 @@ class TaskListForm extends Component
         // Create array of currently assigned statuses
         $statusArray = [];
         $colorArray = [];
-        foreach ($taskList->statuses as $status) {
+        foreach ($statuses as $status) {
+            $taskColor = $taskList->statuses->find($status->id);
             $statusArray[$status->id] = $status->id;
-            $colorArray[$status->id] = $status->pivot->color ? $status->pivot->color : '#ffffff';
+            $colorArray[$status->id] = $taskColor && $taskColor->pivot->color ? $taskColor->pivot->color : '#ffffff';
         }
 
         // Mark currently assigned statuses to state

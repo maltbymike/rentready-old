@@ -56,11 +56,15 @@
                 </x-slot>
 
                 <x-slot name="content">
+                    
                     <div class="col-span-full max-h-[50vh] overflow-y-auto">
+
                         <x-tasks.assign-statuses-to-task-lists
                             :statuses="$state['statuses']"
                             class="mb-3 col-span-6" />
+
                     </div>
+
                 </x-slot>    
         
             </x-page-section>
@@ -77,7 +81,7 @@
                 wire:click.prevent="clear" 
                 wire:loading.attr="disabled"
                 wire:click.target="clear">
-                {{ __('Clear') }}
+                {{ __('Close') }}
             </x-jet-danger-button>
 
             <x-jet-button>

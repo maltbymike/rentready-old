@@ -9,7 +9,7 @@
 
 <x-modal :id="$id" :maxWidth="$maxWidth" {{ $attributes }}>
 
-    <div class="h-[94vh] flex flex-col">
+    <div class="h-[94vh] flex flex-col overflow-y-auto">
         <div class="p-6 pb-2 text-lg bg-white {{ $titleClass }}">
             {{ $title }}
         </div>

@@ -36,44 +36,6 @@
                 
             @endforeach
 
-            <div x-data="{ showAddNewStatus: false }" class="contents">
-            
-                <button class="bg-white text-primary border border-primary rounded-lg py-1 px-3 flex gap-3 items-center hover:bg-primary hover:text-white active:bg-darkblue justify-center"
-                    @click.stop="showAddNewStatus = true"
-                    x-show="! showAddNewStatus">
-                    
-                    {{ __('Add New Status') }}
-                
-                </button>
-
-                <div x-show="showAddNewStatus"
-                    x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="transform opacity-0 scale-95"
-                    x-transition:enter-end="transform opacity-100 scale-100"
-                    style="display: none"
-                    @click.stop>
-                
-                    <div class="flex items-center border rounded-lg focus-within:border-primary">
-                        <input type="text"
-                            name="newStatusName" 
-                            wire:model="list.newStatusName"
-                            class="grow py-1 px-3 rounded-l-lg border-r-0 border-gray-200 focus:border-none focus:ring-0 focus:ring-offset-0 w-3/4" 
-                            placeholder="New Status" />
-
-                            <x-forms.input-color name="newStatusColor" wire:model="list.newStatusColor" />
-
-                        <button type="submit"
-                            class="group grow-0 active:scale-125 disabled:scale-100"
-                            {{ strlen($this->list->newStatusName) >= 3 ? '' : 'disabled' }}>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-6 w-6 p-1 mx-1 rounded-full border fill-green-300 hover:fill-green-600 hover:border-green-600 group-disabled:fill-gray-200 group-disabled:border-gray-200"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
-                        </button>
-                    </div>
-            
-                </div>
-            
-            </div>
-
         </div>
 
     </x-slot>
