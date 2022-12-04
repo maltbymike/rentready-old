@@ -11,7 +11,6 @@
 
                 <x-single-item 
                     wire:key="task-{{ $task['id'] }}"
-                    wire:poll=''
                     wire:click.prevent="$emit('showTask', {{ $task['id'] }})"
                     disabled="{{$task->isClosed()}}">
 

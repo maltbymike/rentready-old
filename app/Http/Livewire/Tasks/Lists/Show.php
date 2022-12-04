@@ -23,6 +23,10 @@ class Show extends Component
     public function changeTaskStatus(Task $task, int $status)
     {
         $task->status()->associate($status);
+
+        // Set status in state so that view will be updated
+        $this->list->tasks->find($task->id)->task_status_id = $status;
+
         $task->save();
 
         // Update user that task has been changed
@@ -39,9 +43,24 @@ class Show extends Component
 
     public function closeOrOpenTask(Task $task)
     {
+        // Determine if task should be opened or closed and set closed_at accordingly
         $task->closeOrOpen();
-        $task->save();
+        
+        // Find first task list assigned to this task
+        $list = $task->lists->first();
 
+        // Get open or closed status from task list
+        $closeOrOpenStatus = $task->closed_at != null ? $list->closed : $list->open;
+
+        // Associated task with status
+        $task->status()->associate($closeOrOpenStatus);
+        
+        // Set status in state so that view will be updated
+        $this->list->tasks->find($task->id)->task_status_id = $closeOrOpenStatus;
+
+        // Persist change
+        $task->save();
+        
         // Update user that task has been changed
         $this->dispatchBrowserEvent('alert',[
             'type' => 'success',
