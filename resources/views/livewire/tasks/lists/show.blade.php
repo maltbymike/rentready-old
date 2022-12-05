@@ -12,14 +12,14 @@
                 <x-single-item 
                     wire:key="task-{{ $task['id'] }}"
                     wire:click.prevent="$emit('showTask', {{ $task['id'] }})"
-                    disabled="{{$task->isClosed()}}">
+                    disabled="{{ $task->is_closed }}">
 
                     <x-slot name="start">
 
                         <input type="checkbox" 
                             wire:click="closeOrOpenTask({{ $task }})"
+                            wire:model="list.tasks.{{$key}}.is_closed"
                             class="m-2 text-primary focus:ring-primary rounded-lg"
-                            {{ $task->isClosed() ? 'checked' : '' }}
                             title="Close Task" />
                     
                         </x-slot>

@@ -13,7 +13,15 @@ class Show extends Component
 
     protected $rules = [
         'list.tasks.*.task_status_id' => 'integer',
+        'list.tasks.*.is_closed' => 'boolean',
     ];
+
+    public function mount()
+    {
+        foreach ($this->list->tasks as $task) {
+            $task->is_closed = $task->isClosed();
+        }
+    }
 
     public function render()
     {
