@@ -52,7 +52,7 @@
                                 wire:model="list.tasks.{{ $key }}.task_status_id"
                                 :current="$task->task_status_id"
                                 :statuses="$list->statuses" />
-                        
+                            
                             <button 
                                 wire:click="$emit('loadTaskList', '{{ $task['id'] }}')"
                                 class="h-4 w-4 m-2 hover:fill-primary active:fill-gray-900" 
