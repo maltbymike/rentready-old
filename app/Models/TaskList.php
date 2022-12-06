@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TaskList extends Model
 {
+
     use HasFactory;
 
     protected $fillable = ['name', 'open', 'closed'];
@@ -22,4 +23,5 @@ class TaskList extends Model
     public function team() {
         return $this->belongsTo(Team::class, 'team_id');
     }
+
 }

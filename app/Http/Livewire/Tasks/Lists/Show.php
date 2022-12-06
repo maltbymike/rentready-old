@@ -18,18 +18,25 @@ class Show extends Component
 
     public function mount()
     {
+
         foreach ($this->list->tasks as $task) {
+
             $task->is_closed = $task->isClosed();
+
         }
+
     }
 
     public function render()
     {
+
         return view('livewire.tasks.lists.show');
+
     }
 
     public function changeTaskStatus(Task $task, int $status)
     {
+
         // If task status is currently closed then set closed_at to null
         if ($task->status->id == $this->list->closed) $task->closed_at = null;
 
@@ -51,15 +58,19 @@ class Show extends Component
             'type' => 'success',
             'message' => __('Status Updated'),
         ]);
+
     }
 
     public function updated($propertyName)
     {
+
         $this->validateOnly($propertyName);
+    
     }
 
     public function closeOrOpenTask(Task $task)
     {
+    
         // Associate open or closed status to task
         $closeOrOpenStatus = $task->closeOrOpen();
         
@@ -74,5 +85,7 @@ class Show extends Component
             'type' => 'success',
             'message' => $task->isClosed() ? __('Closed Task') : __('Reopened Task'),
         ]);
+
     }
+
 }
