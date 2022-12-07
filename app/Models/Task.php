@@ -199,13 +199,13 @@ class Task extends Model
             // ever reopened only the new task will repeat 
             $this->repeats = null;
 
+            // Save changes to newTask;
+            $newTask->save();
+
         } 
 
         // Close task
         $this->closed_at = now();
-
-        // Save changes to newTask;
-        $newTask->save();
 
     }
 

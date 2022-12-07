@@ -19,6 +19,13 @@ class Show extends Component
     public function mount()
     {
 
+        $this->processTaskList();
+
+    }
+
+    public function processTaskList()
+    {
+
         foreach ($this->list->tasks as $task) {
 
             $task->is_closed = $task->isClosed();
@@ -73,12 +80,13 @@ class Show extends Component
     
         // Associate open or closed status to task
         $closeOrOpenStatus = $task->closeOrOpen();
-        
-        // Set status in state so that view will be updated
-        $this->list->tasks->find($task->id)->task_status_id = $closeOrOpenStatus;
 
         // Persist change
         $task->save();
+
+        // Set status in state so that view will be updated
+        $this->list->refresh();
+        $this->processTaskList();
         
         // Update user that task has been changed
         $this->dispatchBrowserEvent('alert',[
