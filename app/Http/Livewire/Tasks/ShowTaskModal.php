@@ -65,6 +65,27 @@ class ShowTaskModal extends Component
         ]);
     }
 
+    public function changeTaskStatus(Task $task, int $status)
+    {
+
+        // Set status
+        $task->setStatus($status);
+
+        // Persist change
+        $task->save();
+
+        // Set status in state so that view will be updated
+        $this->currentTask = $task->toArray();
+        $this->currentTask['is_closed'] = $task->isClosed();
+
+        // Update user that task has been changed
+        $this->dispatchBrowserEvent('alert',[
+            'type' => 'success',
+            'message' => __('Status Updated'),
+        ]);
+    
+    }
+
     public function handleSortOrderChange($sortOrder)
     {
         $currentSubtasks = collect($this->currentTask['children']);

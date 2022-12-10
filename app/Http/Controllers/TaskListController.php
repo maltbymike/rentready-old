@@ -52,7 +52,7 @@ class TaskListController extends Controller
             if ( $currentTaskStatus = $list->statuses->find($task->task_status_id) ) {
             
                 $task->statusName = $currentTaskStatus->name;
-                $task->statusColor = $currentTaskStatus->pivot->color;    
+                $task->statusColor = $currentTaskStatus->pivot->color;
             
             }
         

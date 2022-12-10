@@ -161,6 +161,23 @@ class Task extends Model
     /**
      * @return null
      */
+    public function setStatus(int $status)
+    {
+
+        // If task status is currently closed then set closed_at to null
+        if ($this->isClosed()) $this->setStatusOpened();
+
+        // If task is being set to the lists closed status then set closed_at to now()
+        if ($status == $this->getPrimaryTaskList()->closed) $this->setStatusClosed();
+
+        // Associate new status with task
+        $this->status()->associate($status);
+
+    }
+
+    /**
+     * @return null
+     */
     public function setStatusClosed()
     {
 

@@ -44,14 +44,8 @@ class Show extends Component
     public function changeTaskStatus(Task $task, int $status)
     {
 
-        // If task status is currently closed then set closed_at to null
-        if ($task->status->id == $this->list->closed) $task->closed_at = null;
-
-        // If task is being set to the lists closed status then set closed_at to now()
-        if ($status == $this->list->closed) $task->closed_at = now();
-
-        // Associate new status with task
-        $task->status()->associate($status);
+        // Set Status
+        $task->setStatus($status);
 
         // Persist changes
         $task->save();

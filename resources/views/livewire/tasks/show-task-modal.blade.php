@@ -35,59 +35,18 @@
     <x-slot name="title">
 
         <div class="flex gap-3">
+
             @if(isset($currentTask['id']))
             
                 {{ $currentTask['name'] }}
             
+                <x-tasks.status-select-dropdown
+                    :current="$currentTask['task_status_id']"
+                    :statuses="$taskStatuses"
+                    wire:change="changeTaskStatus({{ $currentTask['id'] }}, $event.target.value)"
+                    wire:model="currentTask.task_status_id" />
+
             @endif
-
-            <!-- Task Status -->
-            <div class="mb-3 col-span-2 sm:col-span-1">
-
-                <div class="w-full flex gap-3">
-                    
-                    <!-- Task Status Dropdown -->
-                    <x-forms.form-group class="grow">
-                        <x-forms.select 
-                            id="task_status_id" 
-                            name="task_status_id" 
-                            wire:model="currentTask.task_status_id"
-                        >
-                            @foreach ($taskStatuses as $status)
-                                <option value="{{ $status->id }}">{{ $status->name }}</option>
-                            @endforeach
-                        </x-forms.select>
-                        <x-forms.label for="task_status_id">{{ __('Status') }}</x-forms.label>
-                    </x-forms.form-group>
-                                                        
-                    <!-- Task Status Checkbox -->
-                        <button 
-                            wire:click="updateTaskStatusClosed({{ isset($currentTask['id']) ? $currentTask['id'] : '' }})" 
-                            class="grow-0 flex justify-items-center items-center" 
-                            aria-label="Mark task closed"
-                        >
-                            <svg 
-                                @empty ($currentTask['closed_at'])
-                                    class="h-6 w-6 border-2 rounded border-gray-300 fill-gray-200 hover:border-green-300 hover:fill-green-600"
-                                @else
-                                    class="h-6 w-6 border-2 rounded hover:border-gray-300 hover:fill-gray-200 border-green-300 fill-green-600"
-                                @endempty
-                                xmlns="http://www.w3.org/2000/svg" 
-                                viewBox="0 0 512 512"
-                            >
-                                <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
-                                <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
-                            </svg>
-                        </button>
-                    
-                </div>
-
-                @error ('currentTask.statusId') 
-                    <p id="task_status_id_error_help" class="mt-2 text-xs w-full text-red-600 basis-full">{{ $message }}</p>
-                @enderror
-            
-            </div>
-
         </div>
 
     </x-slot>

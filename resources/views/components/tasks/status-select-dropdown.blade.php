@@ -5,15 +5,21 @@
 
 <div class="h-5">
 
-    <x-dropdown dropdownClasses="-translate-y-1/2 -translate-x-7 opacity-100" align="top right" width="w-max">
+    <x-dropdown dropdownClasses="-translate-y-9 -translate-x-7 opacity-100" align="top right" width="w-max">
         
         <x-slot name="trigger">
 
             <button type="button" 
-                class="border-2 focus:ring-0 bg-none rounded-lg py-0 px-2 text-sm w-5 h-5"
-                style="background-color: {{ $statuses->find($current)->pivot->color ?? '#fff' }}; 
-                    color: {{ $statuses->find($current)->pivot->color ?? '#fff' }}"
+                class="flex gap-2 items-center"
                 title="{{ $statuses->find($current)->name ?? '' }}">
+
+                <div class="border-2 focus:ring-0 bg-none rounded-lg py-0 px-2 w-5 h-5"
+                     style="background-color: {{ $statuses->find($current)->pivot->color ?? '#fff' }}; 
+                            color: {{ $statuses->find($current)->pivot->color ?? '#fff' }}">
+                </div>
+
+                {{ $statuses->find($current)->name ?? '' }}
+
             </button>
         
         </x-slot>
